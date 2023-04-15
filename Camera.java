@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.util.Arrays;
 
 public class Camera {
 
@@ -7,6 +8,8 @@ public class Camera {
     public static final int Z = 2;
     public static final int YAW = 0;
     public static final int PITCH = 1;
+    public static final int POSITION = 0;
+    public static final int ROTATION = 1;
 
     public static final double WIDTH = 4.0;
     public static final double HEIGHT = 3.0;
@@ -30,10 +33,15 @@ public class Camera {
         rotation = new double[] {0.0, 0.0};
 
         focusPoint = new double[3];
+
+    }
+
+    public double[][] getInfo() {
+        return new double[][] {position, rotation};
     }
 
     public Point renderParticle(Particle p) {
-        double[] worldDist = p.distance(focusPoint);
+        double[] worldDist = p.distance(position);
         //rotate x and y by -yaw
         double newX = worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW;
         double newY = worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW;
@@ -41,11 +49,23 @@ public class Camera {
 
         //rotate xy and z by -pitch
         double xyDist = Math.sqrt(newY * newY + newX * newX);
+        System.out.println(xyDist);
         double newXY = xyDist * COS_PITCH + worldDist[Z] * SIN_PITCH;
         double newZ = worldDist[Z] * COS_PITCH - xyDist * SIN_PITCH;
-        double screenZ = FOCAL_LENGTH * newXY / newZ;
+        double screenZ = FOCAL_LENGTH * newZ / newXY;
 
-        return new Point();
+        screenX += WIDTH / 2;
+        screenZ += HEIGHT / 2;
+
+        screenX /= WIDTH;
+        screenZ /= HEIGHT;
+
+        System.out.println(Arrays.toString(worldDist));
+
+        return new Point(
+            (int) (screenX * Window.DISPLAY_DIMENSION.getWidth()), 
+            (int) (screenZ * Window.DISPLAY_DIMENSION.getHeight())
+        );
     }
 
     public void calculateFocusPoint() {
@@ -55,14 +75,43 @@ public class Camera {
         SIN_PITCH = Math.sin(rotation[PITCH]);
         COS_PITCH = Math.cos(rotation[PITCH]);
 
-
-        double xOffset = FOCAL_LENGTH * COS_PITCH * COS_YAW;
-        double yOffset = FOCAL_LENGTH * COS_PITCH * SIN_YAW;
+        double xOffset = FOCAL_LENGTH * COS_PITCH * SIN_YAW;
+        double yOffset = FOCAL_LENGTH * COS_PITCH * COS_YAW;
         double zOffset = FOCAL_LENGTH * SIN_PITCH;
+
         focusPoint[X] = position[X] - xOffset;
         focusPoint[Y] = position[Y] - yOffset;
         focusPoint[Z] = position[Z] - zOffset;
+
+        focusPoint[X] %= World.size[X];
+        focusPoint[Y] %= World.size[Y];
+        focusPoint[Z] %= World.size[Z];
     }
 
+    public void update() {
+        position[X] %= World.size[X];
+        position[Y] %= World.size[Y];
+        position[Z] %= World.size[Z];
 
+        if (rotation[PITCH] > Math.PI / 2) {
+            rotation[PITCH] = Math.PI / 2;
+        }
+        if (rotation[PITCH] < -Math.PI / 2) {
+            rotation[PITCH] = -Math.PI / 2;
+        }
+
+        while (rotation[YAW] > Math.PI) {
+            rotation[YAW] -= Math.PI * 2;
+        }
+        while (rotation[YAW] < -Math.PI) {
+            rotation[YAW] += Math.PI * 2;
+        }
+
+        calculateFocusPoint();
+    }
+
+    public String toString() {
+        return "(X: " + position[X] + ", Y: " + position[Y] + ", Z: " + position[Z] + 
+        ", PITCH: " + rotation[PITCH] + ", YAW: " + rotation[YAW] + ")";
+    }
 }

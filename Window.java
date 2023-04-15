@@ -7,8 +7,8 @@ import javax.swing.*;
 
 public class Window extends JPanel {
 
-    public static final Dimension WINDOW_DIMENSION = new Dimension(400, 400);
-    public static final Dimension DISPLAY_DIMENSION = new Dimension(1080, 1080);
+    public static final Dimension WINDOW_DIMENSION = new Dimension(800, 600);
+    public static final Dimension DISPLAY_DIMENSION = new Dimension(800, 600);
 
 
     public static void main(String[] args) {
@@ -16,22 +16,20 @@ public class Window extends JPanel {
     }
 
     public Window() {
-
         JFrame frame = new JFrame("em3rge");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(WINDOW_DIMENSION);
-        frame.pack();
-        
-        
-        JPanel graphicsElement = new JPanel();
-        frame.getContentPane().add(graphicsElement, BorderLayout.CENTER);
-        Graphics g = graphicsElement.getGraphics();
-        g.fillRect(100, 100, 100, 100);
-        g.dispose();
-
+        frame.setSize(WINDOW_DIMENSION);
+        Display d = new Display();
+        frame.add(d);
         frame.setVisible(true);
 
-        
-
+        d.getWorld().addParticle(new Particle(0, 10, 0));
+        d.getWorld().addParticle(new Particle(2, 10, 0));
+        d.getWorld().addParticle(new Particle(0, 12, 0));
+        d.getWorld().addParticle(new Particle(2, 12, 0));
+        d.getWorld().addParticle(new Particle(0, 10, 2));
+        d.getWorld().addParticle(new Particle(2, 10, 2));
+        d.getWorld().addParticle(new Particle(0, 12, 2));
+        d.getWorld().addParticle(new Particle(2, 12, 2));
     }
 }

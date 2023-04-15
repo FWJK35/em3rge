@@ -2,13 +2,15 @@
  *
  */
 
-
 public class Particle {
+
+    public static final double UPDATE_DISTANCE = 50;
+
     private double[] position;
     private double[] velocity;
     private int type;
 
-    // constructor
+    // constructors
     public Particle() {
         //randomly generate position
         this.position = new double[World.dimensions];
@@ -16,6 +18,12 @@ public class Particle {
             this.position[i] = World.size[i] * Math.random();
         }
     }
+
+    public Particle(double x, double y, double z) {
+        //randomly generate position
+        this.position = new double[] {x, y, z};
+    }
+
     public Particle(int type) {
         this();
         this.type = type;
@@ -32,17 +40,26 @@ public class Particle {
         return type;
     }
 
-    // returns the shortest distance vector to a different 
-    // Particle in the world, assuming the space extends onto itself
-    public double[] distance(Particle p) {
-        double[] distance = new double[World.dimensions];
-        for (int i = 0; i < World.dimensions; i++) {
-            double di = p.getPosition()[i] - position[i];
-            distance[i] = di;
+    public void update() {
+        updatePosition();
+        updateVelocity();
+    }
+    public void update(int ticks) {
+        for (int i = 0; i < ticks; i++) {
+            update();
         }
-        return distance;
+    }
+    public void updatePosition() {
+        for (int i = 0; i < World.dimensions; i++) {
+            position[i] += velocity[i];
+        }
+    }
+    public void updateVelocity() {
+        
     }
 
+    // returns the shortest displacement vector to a different 
+    // point in the world, assuming the space extends onto itself
     public double[] distance(double[] pos) {
         double[] distance = new double[World.dimensions];
         for (int i = 0; i < World.dimensions; i++) {
@@ -51,6 +68,10 @@ public class Particle {
             distance[i] = magMin(di, df);
         }
         return distance;
+    }
+
+    public double[] distance(Particle p) {
+        return distance(p.getPosition());
     }
 
     // returns the squared Euclidean distance to a different
@@ -66,5 +87,9 @@ public class Particle {
     // returns the minimum of two numbers by magnitude
     private static double magMin(double a, double b) {
         return Math.abs(a) < Math.abs(b) ? a : b;
+    }
+
+    public String toString() {
+        return "(X: " + position[0] + ", Y: " + position[1] + ", Z: " + position[2] + ")";
     }
 }
