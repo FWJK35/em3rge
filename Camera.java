@@ -1,5 +1,4 @@
 import java.awt.Point;
-import java.util.Arrays;
 
 public class Camera {
 
@@ -20,10 +19,10 @@ public class Camera {
     private double[] rotation; // Yaw, Pitch
 
     //calculated values for every camera angle
-    private double SIN_YAW;
-    private double COS_YAW;
-    private double SIN_PITCH;
-    private double COS_PITCH;
+    public double SIN_YAW;
+    public double COS_YAW;
+    public double SIN_PITCH;
+    public double COS_PITCH;
     private double[] focusPoint;
 
 
@@ -43,13 +42,15 @@ public class Camera {
     public Point renderParticle(Particle p) {
         double[] worldDist = p.distance(position);
         //rotate x and y by -yaw
-        double newX = worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW;
         double newY = worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW;
+        if (newY > 0) {
+            return new Point(-100, -100);
+        }
+        double newX = worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW;
         double screenX = FOCAL_LENGTH * newX / newY;
 
         //rotate xy and z by -pitch
         double xyDist = Math.sqrt(newY * newY + newX * newX);
-        System.out.println(xyDist);
         double newXY = xyDist * COS_PITCH + worldDist[Z] * SIN_PITCH;
         double newZ = worldDist[Z] * COS_PITCH - xyDist * SIN_PITCH;
         double screenZ = FOCAL_LENGTH * newZ / newXY;
@@ -59,8 +60,6 @@ public class Camera {
 
         screenX /= WIDTH;
         screenZ /= HEIGHT;
-
-        System.out.println(Arrays.toString(worldDist));
 
         return new Point(
             (int) (screenX * Window.DISPLAY_DIMENSION.getWidth()), 
