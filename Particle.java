@@ -44,6 +44,7 @@ public class Particle {
         updatePosition();
         updateVelocity();
     }
+    
     public void update(int ticks) {
         for (int i = 0; i < ticks; i++) {
             update();

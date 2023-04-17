@@ -43,8 +43,9 @@ public class Camera {
         double[] worldDist = p.distance(position);
         //rotate x and y by -yaw
         double newY = worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW;
+        //todo DONT RENDER PARTICLE
         if (newY > 0) {
-            return new Point(-100, -100);
+            //return new Point(-100, -100);
         }
         double newX = worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW;
         double screenX = FOCAL_LENGTH * newX / newY;

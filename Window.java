@@ -31,5 +31,7 @@ public class Window extends JPanel {
         d.getWorld().addParticle(new Particle(2, 10, 2));
         d.getWorld().addParticle(new Particle(0, 12, 2));
         d.getWorld().addParticle(new Particle(2, 12, 2));
+
+        d.getWorld().addParticle(new Particle(0, 0, -10));
     }
 }

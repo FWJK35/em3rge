@@ -65,10 +65,11 @@ public class Display extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     cam.getInfo()[Camera.ROTATION][Camera.YAW] -= 0.01;
                 }
-                if (world.getParticles().size() < 1000) world.addParticle(new Particle());
+                //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
                 renderParticles();
             }
         });
+
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -82,7 +83,7 @@ public class Display extends JPanel {
 
                 cam.getInfo()[Camera.ROTATION][Camera.PITCH] += (e.getY() - getHeight() / 2) / 1000.0;
                 cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
-                if (world.getParticles().size() < 1000) world.addParticle(new Particle());
+                //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
                 renderParticles();
             }
         });
@@ -93,10 +94,11 @@ public class Display extends JPanel {
         cam.update();
         Graphics g = getGraphics();
         g.clearRect(0, 0, getWidth(), getHeight());
-        for (Particle p : world.getParticles()) {
-            
+        for (int i = 0; i < world.getParticles().size(); i++) {
+            Particle p = world.getParticles().get(i);
             Point particlePosition = cam.renderParticle(p);
             g.fillOval(particlePosition.x, particlePosition.y, 5, 5);
+            g.drawString(i + "", particlePosition.x + 5, particlePosition.y - 5);
         }
         //System.out.println(world.getParticles().size() + " particles at " + (System.currentTimeMillis() - start) + "ms/frame");
     }
