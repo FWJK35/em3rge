@@ -12,14 +12,19 @@ public class Particle {
 
     // constructors
     public Particle() {
-        //randomly generate position
+        type = 0;
+
+        //randomly generate position and set velocity to 0
         this.position = new double[World.dimensions];
+        this.velocity = new double[World.dimensions];
         for (int i = 0; i < World.dimensions; i++) {
             this.position[i] = World.size[i] * Math.random();
+            this.velocity[i] = 0;
         }
     }
 
     public Particle(double x, double y, double z) {
+        this();
         //randomly generate position
         this.position = new double[] {x, y, z};
     }
@@ -40,24 +45,17 @@ public class Particle {
         return type;
     }
 
-    public void update() {
-        updatePosition();
-        updateVelocity();
+    public void addVelocity(int i, double addend) {
+        velocity[i] += addend;
     }
-    
-    public void update(int ticks) {
-        for (int i = 0; i < ticks; i++) {
-            update();
-        }
-    }
+
     public void updatePosition() {
         for (int i = 0; i < World.dimensions; i++) {
             position[i] += velocity[i];
         }
     }
-    public void updateVelocity() {
-        
-    }
+
+    
 
     // returns the shortest displacement vector to a different 
     // point in the world, assuming the space extends onto itself
@@ -73,16 +71,6 @@ public class Particle {
 
     public double[] distance(Particle p) {
         return distance(p.getPosition());
-    }
-
-    // returns the squared Euclidean distance to a different
-    // Particle in the world, assuming the space extends onto itself
-    public double euclideanDistanceSquared(Particle p) {
-        double distance = 0;
-        for (double di : distance(p)) {
-            distance += di*di;
-        }
-        return distance;
     }
 
     // returns the minimum of two numbers by magnitude

@@ -29,6 +29,11 @@ public class Display extends JPanel {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
+
+                if (e.getKeyCode() == KeyEvent.VK_U) {
+                    world.updateParticles();
+                }
+
                 if (e.getKeyCode() == KeyEvent.VK_W) {
                     cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.SIN_YAW;
                     cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.COS_YAW;
