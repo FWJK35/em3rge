@@ -5,6 +5,7 @@
 public class Particle {
 
     public static final double UPDATE_DISTANCE = 50;
+    public static final int radius = 2;
 
     private double[] position;
     private double[] velocity;
@@ -55,7 +56,15 @@ public class Particle {
         }
     }
 
-    
+    // returns the squared Euclidean distance to a different
+    // Particle in the world, assuming the space extends onto itself
+    public double euclideanDistanceSquared(Particle p) {
+        double distance = 0;
+        for (double di : distance(p)) {
+            distance += di*di;
+        }
+        return distance;
+    }
 
     // returns the shortest displacement vector to a different 
     // point in the world, assuming the space extends onto itself
@@ -79,6 +88,6 @@ public class Particle {
     }
 
     public String toString() {
-        return "(X: " + position[0] + ", Y: " + position[1] + ", Z: " + position[2] + ")";
+        return "{ Position: (X: " + position[0] + ", Y: " + position[1] + ", Z: " + position[2] + "), Velocity: (X: " + velocity[0] + ", Y: " + velocity[1] + ", Z: " + velocity[2] + ")";
     }
 }

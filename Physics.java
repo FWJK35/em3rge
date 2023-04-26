@@ -13,10 +13,20 @@ public class Physics {
         }
     }
 
+    public double attraction(Particle a, Particle b) {
+        return rule[a.getType()][b.getType()] / a.euclideanDistanceSquared(b);
+    }
+
     public void updateParticles(List<Particle> particles) {
+        for (Particle p : particles) {
+            System.out.println(p);
+        }
         updateVelocity(particles);
         for (int i = 0; i < particles.size(); i++) {
             particles.get(i).updatePosition();
+        }
+        for (Particle p : particles) {
+            System.out.println(p);
         }
     }
 

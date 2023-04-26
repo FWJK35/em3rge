@@ -26,13 +26,14 @@ public class Display extends JPanel {
             e.printStackTrace();
         }
         setFocusable(true);
+        
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
 
-                if (e.getKeyCode() == KeyEvent.VK_U) {
-                    world.updateParticles();
-                }
+                // if (e.getKeyCode() == KeyEvent.VK_U) {
+                //     world.updateParticles();
+                // }
 
                 if (e.getKeyCode() == KeyEvent.VK_W) {
                     cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.SIN_YAW;
@@ -72,6 +73,7 @@ public class Display extends JPanel {
                 }
                 //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
                 renderParticles();
+                System.out.println(cam);
             }
         });
 
@@ -89,6 +91,7 @@ public class Display extends JPanel {
                 cam.getInfo()[Camera.ROTATION][Camera.PITCH] += (e.getY() - getHeight() / 2) / 1000.0;
                 cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
                 //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
+                System.out.println(cam);
                 renderParticles();
             }
         });

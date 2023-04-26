@@ -23,15 +23,20 @@ public class Window extends JPanel {
         frame.add(d);
         frame.setVisible(true);
 
-        d.getWorld().addParticle(new Particle(0, 10, 0));
-        d.getWorld().addParticle(new Particle(2, 10, 0));
-        d.getWorld().addParticle(new Particle(0, 12, 0));
-        d.getWorld().addParticle(new Particle(2, 12, 0));
-        d.getWorld().addParticle(new Particle(0, 10, 2));
-        d.getWorld().addParticle(new Particle(2, 10, 2));
-        d.getWorld().addParticle(new Particle(0, 12, 2));
-        d.getWorld().addParticle(new Particle(2, 12, 2));
+        // d.getWorld().addParticle(new Particle(0, 11, 0));
+        // d.getWorld().addParticle(new Particle(0, 10, 0));
+        
+        d.getWorld().addParticle(new Particle(10, 0, 0));
+        d.getWorld().addParticle(new Particle(10, 2, 0));
+        d.getWorld().addParticle(new Particle(12, 0, 0));
+        d.getWorld().addParticle(new Particle(12, 2, 0));
+        d.getWorld().addParticle(new Particle(10, 0, 2));
+        d.getWorld().addParticle(new Particle(10, 2, 2));
+        d.getWorld().addParticle(new Particle(12, 0, 2));
+        d.getWorld().addParticle(new Particle(12, 2, 2));
 
-        d.getWorld().addParticle(new Particle(0, 0, -10));
+        //d.getWorld().addParticle(new Particle(0, 0, -10));
+
+        d.renderParticles();
     }
 }
