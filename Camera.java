@@ -45,33 +45,36 @@ public class Camera {
         double newX = worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW;
         double newY = worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW;
         //TODO DONT RENDER PARTICLE
-        
+        newX = newX * COS_PITCH + worldDist[Z] * SIN_PITCH;
+        newY = newY * COS_PITCH - worldDist[Z] * SIN_PITCH;
         
 
-        //rotate xy and z by -pitch
+        //rotate x, y and z by -pitch
         double xyDist = Math.sqrt(newY * newY + newX * newX);
-        double newXY = xyDist * COS_PITCH + worldDist[Z] * -SIN_PITCH;
         //System.out.println(newXY);
-        double xyRatio = newXY / xyDist;
-        newX *= xyRatio;
-        newY *= xyRatio;
+        /*
+        newX = x cos θ + z sin θ;
+        newZ = −x sin θ + z cos θ;
+        newY = y cos θ − z sin θ;
+        newZ = y sin θ + z cos θ;
+        */
         if (newY < 0) {
-            return new Point();
+            //return new Point();
         }
         double newZ = worldDist[Z] * COS_PITCH + xyDist * SIN_PITCH;
-        double screenX = FOCAL_LENGTH * newY / newX;
+        double screenY = FOCAL_LENGTH * newY / newX;
         double screenZ = FOCAL_LENGTH * newZ / newX;
 
         //System.out.println(newX + " " + newY + " " + newZ);
 
-        screenX += WIDTH / 2;
+        screenY += WIDTH / 2;
         screenZ += HEIGHT / 2;
 
-        screenX /= WIDTH;
+        screenY /= WIDTH;
         screenZ /= HEIGHT;
 
         return new Point(
-            (int) (screenX * Window.DISPLAY_DIMENSION.getWidth()), 
+            (int) (screenY * Window.DISPLAY_DIMENSION.getWidth()), 
             (int) (screenZ * Window.DISPLAY_DIMENSION.getHeight())
         );
     }

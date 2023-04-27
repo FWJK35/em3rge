@@ -5,7 +5,7 @@
 public class Particle {
 
     public static final double UPDATE_DISTANCE = 50;
-    public static final int radius = 2;
+    public static final int RADIUS = 2;
 
     private double[] position;
     private double[] velocity;
@@ -39,6 +39,10 @@ public class Particle {
     public double[] getPosition() {
         return position;
     }
+    public double getPosition(int i) {
+        return position[i];
+    }
+
     public double[] getVelocity() {
         return velocity;
     }

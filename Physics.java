@@ -13,10 +13,6 @@ public class Physics {
         }
     }
 
-    public double attraction(Particle a, Particle b) {
-        return rule[a.getType()][b.getType()] / a.euclideanDistanceSquared(b);
-    }
-
     public void updateParticles(List<Particle> particles) {
         for (Particle p : particles) {
             System.out.println(p);
@@ -32,10 +28,14 @@ public class Physics {
 
     public void updateVelocity(Particle a, Particle b) {
         for (int i = 0; i < World.dimensions; i++) {
-            double distSquared = Math.pow(a.getPosition()[i] - b.getPosition()[i], 2);
-            
-            a.addVelocity(i, rule[a.getType()][b.getType()] / distSquared);
-            b.addVelocity(i, rule[b.getType()][a.getType()] / distSquared);
+            double scale = a.euclideanDistanceSquared(b);
+
+            if (scale > Math.pow(Particle.RADIUS, 2)) {
+                scale = (a.getPosition(i) - b.getPosition(i)) / scale;
+
+                a.addVelocity(i, -scale * rule[a.getType()][b.getType()]);
+                b.addVelocity(i, scale * rule[b.getType()][a.getType()]);
+            }
         }
     }
     public void updateVelocity(List<Particle> particles) {

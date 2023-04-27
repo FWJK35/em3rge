@@ -31,26 +31,26 @@ public class Display extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
 
-                // if (e.getKeyCode() == KeyEvent.VK_U) {
-                //     world.updateParticles();
-                // }
+                if (e.getKeyCode() == KeyEvent.VK_U) {
+                    world.updateParticles();
+                }
 
                 if (e.getKeyCode() == KeyEvent.VK_W) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.SIN_YAW;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.COS_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.COS_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.SIN_YAW;
                     
                 }
                 if (e.getKeyCode() == KeyEvent.VK_A) {
+                    cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.SIN_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.COS_YAW;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_S) {
                     cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.COS_YAW;
                     cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.SIN_YAW;
                 }
-                if (e.getKeyCode() == KeyEvent.VK_S) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.SIN_YAW;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.COS_YAW;
-                }
                 if (e.getKeyCode() == KeyEvent.VK_D) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.COS_YAW;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.SIN_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.SIN_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.COS_YAW;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_Q) {
                     cam.getInfo()[Camera.POSITION][Camera.Z] += 1;
