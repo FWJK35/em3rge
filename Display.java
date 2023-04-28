@@ -35,6 +35,14 @@ public class Display extends JPanel {
                     world.updateParticles();
                 }
 
+                if (e.getKeyCode() == KeyEvent.VK_R) {
+                    cam.getInfo()[Camera.POSITION][Camera.X] = -1.01;
+                    cam.getInfo()[Camera.POSITION][Camera.Y] = 0;
+                    cam.getInfo()[Camera.POSITION][Camera.Z] = 0;
+                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] = -Math.PI/2;
+                    cam.getInfo()[Camera.ROTATION][Camera.YAW] = 0;
+                }
+
                 if (e.getKeyCode() == KeyEvent.VK_W) {
                     cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.COS_YAW;
                     cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.SIN_YAW;

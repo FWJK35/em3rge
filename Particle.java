@@ -24,6 +24,11 @@ public class Particle {
         }
     }
 
+    public Particle(double x, double y, double z, int type) {
+        this(x, y, z);
+        this.type = type;
+    }
+
     public Particle(double x, double y, double z) {
         this();
         //randomly generate position
@@ -46,6 +51,10 @@ public class Particle {
     public double[] getVelocity() {
         return velocity;
     }
+    public double getVelocity(int i) {
+        return velocity[i];
+    }
+
     public int getType() {
         return type;
     }

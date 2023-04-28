@@ -41,27 +41,34 @@ public class Camera {
 
     public Point renderParticle(Particle p) {
         double[] worldDist = p.distance(position);
-        //rotate x and y by -yaw
-        double newX = worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW;
-        double newY = worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW;
-        //TODO DONT RENDER PARTICLE
-        newX = newX * COS_PITCH + worldDist[Z] * SIN_PITCH;
-        newY = newY * COS_PITCH - worldDist[Z] * SIN_PITCH;
+        double xyInverse = 1/Math.sqrt(worldDist[X] * worldDist[X] + worldDist[Y] * worldDist[Y]);
+
+        double newX = 
+        worldDist[X] * COS_YAW * COS_PITCH + 
+        worldDist[Y] * SIN_YAW * COS_PITCH +
+        worldDist[Z] * SIN_PITCH * xyInverse * 
+        (worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW); //xcosacosb-ysinacosb - zsinb(1/xy)(xcosa-ysina)
+
+        double newY = worldDist[Y] * COS_YAW * COS_PITCH - 
+        worldDist[X] * SIN_YAW * COS_PITCH +
+        worldDist[Z] * SIN_PITCH * xyInverse * 
+        (worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW); //ycosacosb+xsinacosb - zsinb(1/xy)(ycosa+xsina)
+
         
 
+        double newZ = worldDist[Z] * COS_PITCH + 1/xyInverse * SIN_PITCH; //zcosb + xysinb
+
+        //TODO DONT RENDER PARTICLE
+        if (p.getType() == -2) {
+            System.out.println("Old position: " + p);
+            System.out.println("New position: " + new Particle(newX, newY, newZ));
+        }
+
         //rotate x, y and z by -pitch
-        double xyDist = Math.sqrt(newY * newY + newX * newX);
-        //System.out.println(newXY);
-        /*
-        newX = x cos θ + z sin θ;
-        newZ = −x sin θ + z cos θ;
-        newY = y cos θ − z sin θ;
-        newZ = y sin θ + z cos θ;
-        */
+        
         if (newY < 0) {
             //return new Point();
         }
-        double newZ = worldDist[Z] * COS_PITCH + xyDist * SIN_PITCH;
         double screenY = FOCAL_LENGTH * newY / newX;
         double screenZ = FOCAL_LENGTH * newZ / newX;
 
