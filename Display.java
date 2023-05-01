@@ -36,10 +36,10 @@ public class Display extends JPanel {
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_R) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] = -1.01;
+                    cam.getInfo()[Camera.POSITION][Camera.X] = -1.00;
                     cam.getInfo()[Camera.POSITION][Camera.Y] = 0;
                     cam.getInfo()[Camera.POSITION][Camera.Z] = 0;
-                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] = -Math.PI/2;
+                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] = Math.PI/2;
                     cam.getInfo()[Camera.ROTATION][Camera.YAW] = 0;
                 }
 

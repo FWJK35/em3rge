@@ -41,22 +41,30 @@ public class Camera {
 
     public Point renderParticle(Particle p) {
         double[] worldDist = p.distance(position);
-        double xyInverse = 1/Math.sqrt(worldDist[X] * worldDist[X] + worldDist[Y] * worldDist[Y]);
-
-        double newX = 
+        double xyDist = Math.sqrt(worldDist[X] * worldDist[X] + worldDist[Y] * worldDist[Y]);
+        /*
+        double newX =
         worldDist[X] * COS_YAW * COS_PITCH + 
         worldDist[Y] * SIN_YAW * COS_PITCH +
-        worldDist[Z] * SIN_PITCH * xyInverse * 
+        worldDist[Z] * SIN_PITCH * 1/xyDist * 
         (worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW); //xcosacosb-ysinacosb - zsinb(1/xy)(xcosa-ysina)
 
-        double newY = worldDist[Y] * COS_YAW * COS_PITCH - 
+        double newY = 
+        worldDist[Y] * COS_YAW * COS_PITCH - 
         worldDist[X] * SIN_YAW * COS_PITCH +
-        worldDist[Z] * SIN_PITCH * xyInverse * 
+        worldDist[Z] * SIN_PITCH * 1/xyDist * 
         (worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW); //ycosacosb+xsinacosb - zsinb(1/xy)(ycosa+xsina)
+        /**/
+        double newX = (worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW);
+        double newY = (worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW);
+        double newXYDist = Math.sqrt(newX * newX + newY * newY);
+        if (p.getType() == -2) System.out.println(newX + " " + newY + ": " + (xyDist - newXYDist));
+        double xyFactor =  (xyDist * COS_PITCH + worldDist[Z] * SIN_PITCH) / xyDist;
+        newY *= xyFactor;
+        newX *= xyFactor;
+        //*/
 
-        
-
-        double newZ = worldDist[Z] * COS_PITCH + 1/xyInverse * SIN_PITCH; //zcosb + xysinb
+        double newZ = worldDist[Z] * COS_PITCH + xyDist * SIN_PITCH; //zcosb + xysinb
 
         //TODO DONT RENDER PARTICLE
         if (p.getType() == -2) {
@@ -69,8 +77,8 @@ public class Camera {
         if (newY < 0) {
             //return new Point();
         }
-        double screenY = FOCAL_LENGTH * newY / newX;
-        double screenZ = FOCAL_LENGTH * newZ / newX;
+        double screenY = FOCAL_LENGTH * newY / newX / newX;
+        double screenZ = FOCAL_LENGTH * newZ / newX / newX;
 
         //System.out.println(newX + " " + newY + " " + newZ);
 
