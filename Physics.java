@@ -1,14 +1,15 @@
 import java.util.List;
 
 public class Physics {
-    private final double step = .5;
+    private final double STEP = .5;
+    private final double REPULSION_TOLERANCE = 3;
     private double[][] rule;
     
     public Physics(int types) {
         rule = new double[types][types];
         for (int i = 0; i < types; i++) {
             for (int j = 0; j < types; j++) {
-                rule[i][j] = 1;
+                rule[i][j] = .25;
             }
         }
     }
@@ -26,11 +27,16 @@ public class Physics {
         }
     }
 
+    // updates the velcoity due to the attraction/repulsion of two particles
     public void updateVelocity(Particle a, Particle b) {
+        // updates the velocity in each dimension based on the overal distance
+        double scale = a.euclideanDistanceSquared(b);
         for (int i = 0; i < World.dimensions; i++) {
-            double scale = a.euclideanDistanceSquared(b);
+            if (scale < Particle.UPDATE_DISTANCE * Particle.UPDATE_DISTANCE) {
+                if (scale < REPULSION_TOLERANCE) {
+                    scale *= -1;
+                }
 
-            if (scale > Math.pow(Particle.RADIUS, 2)) {
                 scale = (a.getPosition(i) - b.getPosition(i)) / scale;
 
                 a.addVelocity(i, -scale * rule[a.getType()][b.getType()]);
@@ -38,6 +44,8 @@ public class Physics {
             }
         }
     }
+
+    // updates velocity of particles 
     public void updateVelocity(List<Particle> particles) {
         for (int i = 0; i < particles.size() - 1; i++) {
             for (int j = i + 1; j < particles.size(); j++) {
@@ -59,10 +67,10 @@ public class Physics {
 
     // mutators
     public void increment(int i, int j) {
-        rule[i][j] += step;
+        rule[i][j] += STEP;
     }
 
     public void decrement(int i, int j) {
-        rule[i][j] -= step;
+        rule[i][j] -= STEP;
     }    
 }

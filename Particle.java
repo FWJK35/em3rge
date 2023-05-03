@@ -3,8 +3,8 @@
  */
 
 public class Particle {
-
-    public static final double UPDATE_DISTANCE = 50;
+    
+    public static final double UPDATE_DISTANCE = 100;
     public static final int RADIUS = 2;
 
     private double[] position;
