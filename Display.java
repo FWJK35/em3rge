@@ -36,7 +36,7 @@ public class Display extends JPanel {
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_R) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] = -1.00;
+                    cam.getInfo()[Camera.POSITION][Camera.X] = 1;
                     cam.getInfo()[Camera.POSITION][Camera.Y] = 0;
                     cam.getInfo()[Camera.POSITION][Camera.Z] = 0;
                     cam.getInfo()[Camera.ROTATION][Camera.PITCH] = Math.PI/2;
@@ -74,10 +74,10 @@ public class Display extends JPanel {
                     cam.getInfo()[Camera.ROTATION][Camera.PITCH] += 0.01;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    cam.getInfo()[Camera.ROTATION][Camera.YAW] += 0.01;
+                    cam.getInfo()[Camera.ROTATION][Camera.YAW] += 0.03;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    cam.getInfo()[Camera.ROTATION][Camera.YAW] -= 0.01;
+                    cam.getInfo()[Camera.ROTATION][Camera.YAW] -= 0.03;
                 }
                 //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
                 renderParticles();
@@ -96,8 +96,8 @@ public class Display extends JPanel {
                 robot.mouseMove(center.x, center.y);
                 setCursor(null);
 
-                cam.getInfo()[Camera.ROTATION][Camera.PITCH] += (e.getY() - getHeight() / 2) / 1000.0;
-                cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
+                cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
+                cam.getInfo()[Camera.ROTATION][Camera.YAW] += (e.getX() - getWidth() / 2) / 1000.0;
                 //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
                 System.out.println(cam);
                 renderParticles();
