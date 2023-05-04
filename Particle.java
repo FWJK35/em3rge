@@ -84,7 +84,7 @@ public class Particle {
     public double[] distance(double[] pos) {
         double[] distance = new double[World.dimensions];
         for (int i = 0; i < World.dimensions; i++) {
-            double di = pos[i] - position[i];
+            double di = position[i] - pos[i];
             double df = di + (di < 0 ? World.size[i] : -World.size[i]);
             distance[i] = magMin(di, df);
         }

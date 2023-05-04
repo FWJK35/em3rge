@@ -1,4 +1,5 @@
 import java.awt.AWTException;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Robot;
@@ -50,7 +51,7 @@ public class Display extends JPanel {
                 }
                 if (e.getKeyCode() == KeyEvent.VK_A) {
                     cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.SIN_YAW;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.COS_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.COS_YAW;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_S) {
                     cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.COS_YAW;
@@ -58,7 +59,7 @@ public class Display extends JPanel {
                 }
                 if (e.getKeyCode() == KeyEvent.VK_D) {
                     cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.SIN_YAW;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.COS_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.COS_YAW;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_Q) {
                     cam.getInfo()[Camera.POSITION][Camera.Z] += 1;
@@ -81,7 +82,7 @@ public class Display extends JPanel {
                 }
                 //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
                 renderParticles();
-                System.out.println(cam);
+                //System.out.println(cam);
             }
         });
 
@@ -97,9 +98,9 @@ public class Display extends JPanel {
                 setCursor(null);
 
                 cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
-                cam.getInfo()[Camera.ROTATION][Camera.YAW] += (e.getX() - getWidth() / 2) / 1000.0;
-                //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
-                System.out.println(cam);
+                cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
+                if (world.getParticles().size() < 1000) world.addParticle(new Particle());
+                //System.out.println(cam);
                 renderParticles();
             }
         });
@@ -109,12 +110,19 @@ public class Display extends JPanel {
         //long start = System.currentTimeMillis();
         cam.update();
         Graphics g = getGraphics();
-        g.clearRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.black);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.white);
         for (int i = 0; i < world.getParticles().size(); i++) {
             Particle p = world.getParticles().get(i);
-            Point particlePosition = cam.renderParticle(p);
-            g.fillOval(particlePosition.x, particlePosition.y, 5, 5);
-            g.drawString(i + "", particlePosition.x + 5, particlePosition.y - 5);
+            RenderedParticle particlePosition = cam.renderParticle(p);
+            if (particlePosition != null) {
+                int size = (int) ((World.size[0] - particlePosition.getDist()) / 5);
+                g.fillOval(particlePosition.getX(), particlePosition.getZ(), size, size);
+                g.drawString(i + "", particlePosition.getX() + 10, particlePosition.getZ() - 10);
+            }
+            
+            
         }
         //System.out.println(world.getParticles().size() + " particles at " + (System.currentTimeMillis() - start) + "ms/frame");
     }

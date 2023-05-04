@@ -39,7 +39,7 @@ public class Camera {
         return new double[][] {position, rotation};
     }
 
-    public Point renderParticle(Particle p) {
+    public RenderedParticle renderParticle(Particle p) {
         double[] worldDist = p.distance(position);
         //rotate by -yaw
         double newX = (worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW);
@@ -49,22 +49,27 @@ public class Camera {
         newX = (newX * COS_PITCH + worldDist[Z] * SIN_PITCH);
         
         if (newX < 0) {
-            return new Point();
+            return null;
         }
-        double screenY = FOCAL_LENGTH * newY / newX;
-        double screenZ = FOCAL_LENGTH * newZ / newX;
+
+        double screenX = FOCAL_LENGTH * -newY / newX;
+        double screenZ = FOCAL_LENGTH * -newZ / newX;
 
         //System.out.println(newX + " " + newY + " " + newZ);
 
-        screenY += WIDTH * 0.5;
+        screenX += WIDTH * 0.5;
         screenZ += HEIGHT * 0.5;
 
-        screenY /= WIDTH;
+        screenX /= WIDTH;
         screenZ /= HEIGHT;
+        if (screenZ < 0 || screenZ > HEIGHT || screenX < 0 || screenX > WIDTH) {
+            return null;
+        }
 
-        return new Point(
-            (int) (screenY * Window.DISPLAY_DIMENSION.getWidth()), 
-            (int) (screenZ * Window.DISPLAY_DIMENSION.getHeight())
+        return new RenderedParticle(
+            (int) (screenX * Window.DISPLAY_DIMENSION.getWidth()), 
+            (int) (screenZ * Window.DISPLAY_DIMENSION.getHeight()),
+            Math.sqrt(newX * newX + newY * newY + newZ * newZ)
         );
     }
 
