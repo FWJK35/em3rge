@@ -37,29 +37,29 @@ public class Display extends JPanel {
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_R) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] = 1;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] = 0;
-                    cam.getInfo()[Camera.POSITION][Camera.Z] = 0;
-                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] = Math.PI/2;
+                    cam.getInfo()[Camera.POSITION][Camera.X] = 50;
+                    cam.getInfo()[Camera.POSITION][Camera.Y] = 50;
+                    cam.getInfo()[Camera.POSITION][Camera.Z] = 50;
+                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] = 0;
                     cam.getInfo()[Camera.ROTATION][Camera.YAW] = 0;
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_W) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.COS_YAW;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.SIN_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.getCosYaw();
+                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.getSinYaw();
                     
                 }
                 if (e.getKeyCode() == KeyEvent.VK_A) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.SIN_YAW;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.COS_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.getSinYaw();
+                    cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.getCosYaw();
                 }
                 if (e.getKeyCode() == KeyEvent.VK_S) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.COS_YAW;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.SIN_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.getCosYaw();
+                    cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.getSinYaw();
                 }
                 if (e.getKeyCode() == KeyEvent.VK_D) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.SIN_YAW;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.COS_YAW;
+                    cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.getSinYaw();
+                    cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.getCosYaw();
                 }
                 if (e.getKeyCode() == KeyEvent.VK_Q) {
                     cam.getInfo()[Camera.POSITION][Camera.Z] += 1;
@@ -69,16 +69,16 @@ public class Display extends JPanel {
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= 0.01;
+                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= Math.PI/100;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] += 0.01;
+                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] +=Math.PI/100;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    cam.getInfo()[Camera.ROTATION][Camera.YAW] += 0.03;
+                    cam.getInfo()[Camera.ROTATION][Camera.YAW] += Math.PI/100;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    cam.getInfo()[Camera.ROTATION][Camera.YAW] -= 0.03;
+                    cam.getInfo()[Camera.ROTATION][Camera.YAW] -= Math.PI/100;
                 }
                 //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
                 renderParticles();
@@ -117,9 +117,15 @@ public class Display extends JPanel {
             Particle p = world.getParticles().get(i);
             RenderedParticle particlePosition = cam.renderParticle(p);
             if (particlePosition != null) {
-                int size = (int) ((World.size[0] - particlePosition.getDist()) / 5);
+                int size = particlePosition.getRenderedSize();
+                if (particlePosition.getDist() > 50) {
+                    g.setColor(Color.GRAY);
+                }
+                else {
+                    g.setColor(Color.WHITE);
+                }
                 g.fillOval(particlePosition.getX(), particlePosition.getZ(), size, size);
-                g.drawString(i + "", particlePosition.getX() + 10, particlePosition.getZ() - 10);
+                //g.drawString(i + "", particlePosition.getX() + 10, particlePosition.getZ() - 10);
             }
             
             

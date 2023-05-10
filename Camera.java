@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.util.Arrays;
 
 public class Camera {
 
@@ -10,19 +11,20 @@ public class Camera {
     public static final int POSITION = 0;
     public static final int ROTATION = 1;
 
-    public static final double WIDTH = 4.0;
-    public static final double HEIGHT = 3.0;
-    public static final double FOCAL_LENGTH = 5.0;
+    public static final double FOCAL_LENGTH = 0.5;
+    public static final double WIDTH = FOCAL_LENGTH * 0.8;
+    public static final double HEIGHT = FOCAL_LENGTH * 0.6;
+    
 
     //camera info
     private double[] position; // X, Y, Z
     private double[] rotation; // Yaw, Pitch
 
     //calculated values for every camera angle
-    public double SIN_YAW;
-    public double COS_YAW;
-    public double SIN_PITCH;
-    public double COS_PITCH;
+    private double SIN_YAW;
+    private double COS_YAW;
+    private double SIN_PITCH;
+    private double COS_PITCH;
     private double[] focusPoint;
 
 
@@ -40,7 +42,9 @@ public class Camera {
     }
 
     public RenderedParticle renderParticle(Particle p) {
+        //TODO properly modify relative position
         double[] worldDist = p.distance(position);
+
         //rotate by -yaw
         double newX = (worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW);
         double newY = (worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW);
@@ -48,6 +52,7 @@ public class Camera {
         double newZ = (worldDist[Z] * COS_PITCH - newX * SIN_PITCH);
         newX = (newX * COS_PITCH + worldDist[Z] * SIN_PITCH);
         
+        if (p.getType() == -1) System.out.println(newX + " " + newY + " " + newZ);
         if (newX < 0) {
             return null;
         }
@@ -55,16 +60,17 @@ public class Camera {
         double screenX = FOCAL_LENGTH * -newY / newX;
         double screenZ = FOCAL_LENGTH * -newZ / newX;
 
-        //System.out.println(newX + " " + newY + " " + newZ);
+        if (p.getType() == -1) System.out.println(newX + " " + newY + " " + newZ);
 
         screenX += WIDTH * 0.5;
         screenZ += HEIGHT * 0.5;
-
-        screenX /= WIDTH;
-        screenZ /= HEIGHT;
+        
         if (screenZ < 0 || screenZ > HEIGHT || screenX < 0 || screenX > WIDTH) {
             return null;
         }
+
+        screenX /= WIDTH;
+        screenZ /= HEIGHT;
 
         return new RenderedParticle(
             (int) (screenX * Window.DISPLAY_DIMENSION.getWidth()), 
@@ -80,23 +86,23 @@ public class Camera {
         SIN_PITCH = Math.sin(rotation[PITCH]);
         COS_PITCH = Math.cos(rotation[PITCH]);
 
-        double xOffset = FOCAL_LENGTH * COS_PITCH * SIN_YAW;
-        double yOffset = FOCAL_LENGTH * COS_PITCH * COS_YAW;
+        double xOffset = FOCAL_LENGTH * COS_PITCH * COS_YAW;
+        double yOffset = FOCAL_LENGTH * COS_PITCH * SIN_YAW;
         double zOffset = FOCAL_LENGTH * SIN_PITCH;
 
         focusPoint[X] = position[X] - xOffset;
         focusPoint[Y] = position[Y] - yOffset;
         focusPoint[Z] = position[Z] - zOffset;
 
-        focusPoint[X] %= World.size[X];
-        focusPoint[Y] %= World.size[Y];
-        focusPoint[Z] %= World.size[Z];
+        for (int i = 0; i < World.dimensions; i++) {
+            focusPoint[i] %= World.SIZE;
+        }
     }
 
     public void update() {
-        position[X] %= World.size[X];
-        position[Y] %= World.size[Y];
-        position[Z] %= World.size[Z];
+        for (int i = 0; i < World.dimensions; i++) {
+            position[i] %= World.SIZE;
+        }
 
         if (rotation[PITCH] > Math.PI / 2) {
             rotation[PITCH] = Math.PI / 2;
@@ -105,14 +111,17 @@ public class Camera {
             rotation[PITCH] = -Math.PI / 2;
         }
 
-        while (rotation[YAW] > Math.PI) {
-            rotation[YAW] -= Math.PI * 2;
-        }
-        while (rotation[YAW] < -Math.PI) {
-            rotation[YAW] += Math.PI * 2;
-        }
+        rotation[YAW] %= 2 * Math.PI;
+        rotation[PITCH] %= 2 * Math.PI;
 
         calculateFocusPoint();
+    }
+
+    public double getCosYaw() {
+        return COS_YAW;
+    }
+    public double getSinYaw() {
+        return SIN_YAW;
     }
 
     public String toString() {

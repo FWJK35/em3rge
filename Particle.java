@@ -19,7 +19,7 @@ public class Particle {
         this.position = new double[World.dimensions];
         this.velocity = new double[World.dimensions];
         for (int i = 0; i < World.dimensions; i++) {
-            this.position[i] = World.size[i] * Math.random();
+            this.position[i] = World.SIZE * Math.random();
             this.velocity[i] = 0;
         }
     }
@@ -85,7 +85,7 @@ public class Particle {
         double[] distance = new double[World.dimensions];
         for (int i = 0; i < World.dimensions; i++) {
             double di = position[i] - pos[i];
-            double df = di + (di < 0 ? World.size[i] : -World.size[i]);
+            double df = di + (di < 0 ? World.SIZE : -World.SIZE);
             distance[i] = magMin(di, df);
         }
         return distance;
