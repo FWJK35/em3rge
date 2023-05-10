@@ -11,12 +11,16 @@ public class Camera {
     public static final int POSITION = 0;
     public static final int ROTATION = 1;
 
-    public static final double FOCAL_LENGTH = 0.5;
-    public static final double WIDTH = FOCAL_LENGTH * 0.8;
-    public static final double HEIGHT = FOCAL_LENGTH * 0.6;
+    public static final double FOCAL_LENGTH = 5;
+    public static final double WIDTH = FOCAL_LENGTH * Math.sqrt(3);
+    public static final double HEIGHT = FOCAL_LENGTH * Math.sqrt(3);
+    public static final double RENDER_DISTANCE = World.SIZE / Math.sqrt(3);
     
 
     //camera info
+    enum RenderType {Inside, Outside;}
+    private RenderType renderType = RenderType.Inside;
+
     private double[] position; // X, Y, Z
     private double[] rotation; // Yaw, Pitch
 
@@ -26,6 +30,9 @@ public class Camera {
     private double SIN_PITCH;
     private double COS_PITCH;
     private double[] focusPoint;
+
+    //math constants
+    private final double halfPi = Math.PI * 0.5;
 
 
     public Camera() {
@@ -44,6 +51,26 @@ public class Camera {
     public RenderedParticle renderParticle(Particle p) {
         //TODO properly modify relative position
         double[] worldDist = p.distance(position);
+
+        /*
+        //wrap X coordinate
+        if (Math.abs(rotation[YAW]) < halfPi) {
+            if (worldDist[0] < 0) worldDist[0] += World.SIZE;
+        }
+        else {
+            if (worldDist[0] > 0) worldDist[0] -= World.SIZE;
+        }
+
+        //wrap Y coordinate
+        if (rotation[YAW] > 0) {
+            if (worldDist[1] < 0) worldDist[1] += World.SIZE;
+        }
+        else {
+            if (worldDist[1] > 0) worldDist[1] -= World.SIZE;
+        }
+
+        //wrap Z coordinate
+        */
 
         //rotate by -yaw
         double newX = (worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW);
@@ -122,6 +149,10 @@ public class Camera {
     }
     public double getSinYaw() {
         return SIN_YAW;
+    }
+
+    public RenderType getRenderType() {
+        return renderType;
     }
 
     public String toString() {

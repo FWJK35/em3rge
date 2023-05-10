@@ -3,9 +3,8 @@
  */
 
 public class Particle {
-    
-    public static final double UPDATE_DISTANCE = 100;
     public static final int RADIUS = 2;
+    private static final double FRICTION = .1;
 
     private double[] position;
     private double[] velocity;
@@ -65,7 +64,12 @@ public class Particle {
 
     public void updatePosition() {
         for (int i = 0; i < World.dimensions; i++) {
-            position[i] += velocity[i];
+            velocity[i] *= 1 - FRICTION;
+            position[i] = (position[i] + velocity[i]) % World.SIZE;
+
+            if (position[i] < 0) {
+                position[i] += World.SIZE;
+            }
         }
     }
 

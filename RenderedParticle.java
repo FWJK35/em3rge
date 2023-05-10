@@ -1,6 +1,6 @@
 public class RenderedParticle {
 
-    public static final double PARTICLE_SIZE = 20.0;
+    public static final double PARTICLE_SIZE = 50.0;
 
     private int screenX;
     private int screenZ;
@@ -14,7 +14,7 @@ public class RenderedParticle {
         this.screenX = screenX;
         this.screenZ = screenZ;
         this.dist = dist;
-        this.renderedSize = (int) ((World.SIZE/2 - dist) / 2.5);
+        this.renderedSize = (int) (PARTICLE_SIZE * Camera.FOCAL_LENGTH / (Camera.FOCAL_LENGTH + dist));
 
     }
 

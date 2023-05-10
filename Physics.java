@@ -1,8 +1,10 @@
 import java.util.List;
 
 public class Physics {
+    private final double UPDATE_DISTANCE = 50;
     private final double STEP = .5;
-    private final double REPULSION_TOLERANCE = 3;
+    private final double REPULSION_TOLERANCE = 1;
+    private final double FORCE_SCALE = .5;
     private double[][] rule;
     
     public Physics(int types) {
@@ -16,32 +18,47 @@ public class Physics {
 
     public void updateParticles(List<Particle> particles) {
         for (Particle p : particles) {
-            System.out.println(p);
+            //System.out.println(p);
         }
         updateVelocity(particles);
         for (int i = 0; i < particles.size(); i++) {
             particles.get(i).updatePosition();
         }
         for (Particle p : particles) {
-            System.out.println(p);
+            //System.out.println(p);
         }
+    }
+
+    public double getForce(Particle a, Particle b, double realDist) {
+        double[] dist = a.distance(b);
+        if (dist[0] < UPDATE_DISTANCE && dist[1] < UPDATE_DISTANCE && dist[2] < UPDATE_DISTANCE) {
+            realDist -= REPULSION_TOLERANCE;
+            if (realDist < REPULSION_TOLERANCE) {
+                return realDist / REPULSION_TOLERANCE;
+            }
+            else if (realDist < (UPDATE_DISTANCE + REPULSION_TOLERANCE) * 0.5) {
+                return realDist / (UPDATE_DISTANCE - REPULSION_TOLERANCE) * rule[a.getType()][b.getType()];
+            }
+            else if (realDist < UPDATE_DISTANCE) {
+                return (1 - realDist / (UPDATE_DISTANCE - REPULSION_TOLERANCE)) * rule[a.getType()][b.getType()];
+            }
+        }
+        return 0;
     }
 
     // updates the velcoity due to the attraction/repulsion of two particles
     public void updateVelocity(Particle a, Particle b) {
-        // updates the velocity in each dimension based on the overal distance
-        double scale = a.euclideanDistanceSquared(b);
+        double realDist = Math.sqrt(a.euclideanDistanceSquared(b));
+        double distance = 1;
+        if (realDist != 0) {
+            distance = 1 / realDist;
+        }
+
+        // updates the velocity in each dimension based on the overall distance
         for (int i = 0; i < World.dimensions; i++) {
-            if (scale < Particle.UPDATE_DISTANCE * Particle.UPDATE_DISTANCE) {
-                if (scale < REPULSION_TOLERANCE) {
-                    scale *= -1;
-                }
-
-                scale = (a.getPosition(i) - b.getPosition(i)) / scale;
-
-                a.addVelocity(i, -scale * rule[a.getType()][b.getType()]);
-                b.addVelocity(i, scale * rule[b.getType()][a.getType()]);
-            }
+            double scale = FORCE_SCALE * (a.getPosition(i) - b.getPosition(i)) * distance;
+            a.addVelocity(i, -scale * getForce(a, b, realDist));
+            b.addVelocity(i, scale * getForce(b, a, realDist));
         }
     }
 

@@ -37,7 +37,7 @@ public class Display extends JPanel {
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_R) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] = 50;
+                    cam.getInfo()[Camera.POSITION][Camera.X] = 0;
                     cam.getInfo()[Camera.POSITION][Camera.Y] = 50;
                     cam.getInfo()[Camera.POSITION][Camera.Z] = 50;
                     cam.getInfo()[Camera.ROTATION][Camera.PITCH] = 0;
@@ -99,7 +99,7 @@ public class Display extends JPanel {
 
                 cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
                 cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
-                if (world.getParticles().size() < 1000) world.addParticle(new Particle());
+                //if (world.getParticles().size() < 10) world.addParticle(new Particle());
                 //System.out.println(cam);
                 renderParticles();
             }
@@ -118,12 +118,6 @@ public class Display extends JPanel {
             RenderedParticle particlePosition = cam.renderParticle(p);
             if (particlePosition != null) {
                 int size = particlePosition.getRenderedSize();
-                if (particlePosition.getDist() > 50) {
-                    g.setColor(Color.GRAY);
-                }
-                else {
-                    g.setColor(Color.WHITE);
-                }
                 g.fillOval(particlePosition.getX(), particlePosition.getZ(), size, size);
                 //g.drawString(i + "", particlePosition.getX() + 10, particlePosition.getZ() - 10);
             }
