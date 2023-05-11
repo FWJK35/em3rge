@@ -2,6 +2,7 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -111,14 +112,19 @@ public class Display extends JPanel {
         cam.update();
         Graphics g = getGraphics();
         g.setColor(Color.black);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        //g.fillRect(getX(), getY(), getWidth(), getHeight());
+        g.fillRect((int) getBounds().getX(), 100, 100, 100);//(int) getBounds().getY(), (int) getBounds().getWidth(), (int) getBounds().getHeight());
         g.setColor(Color.white);
+        Rectangle bounds = getBounds();
         for (int i = 0; i < world.getParticles().size(); i++) {
             Particle p = world.getParticles().get(i);
             RenderedParticle particlePosition = cam.renderParticle(p);
             if (particlePosition != null) {
                 int size = particlePosition.getRenderedSize();
-                g.fillOval(particlePosition.getX(), particlePosition.getZ(), size, size);
+                g.fillOval(
+                    (int) (bounds.getCenterX() + bounds.getWidth() * particlePosition.getX()), 
+                    (int) (bounds.getCenterY() + bounds.getHeight() * particlePosition.getZ()), 
+                    size, size);
                 //g.drawString(i + "", particlePosition.getX() + 10, particlePosition.getZ() - 10);
             }
             

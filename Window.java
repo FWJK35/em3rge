@@ -10,6 +10,10 @@ public class Window extends JPanel {
     public static final Dimension WINDOW_DIMENSION = new Dimension(800, 600);
     public static final Dimension DISPLAY_DIMENSION = new Dimension(800, 600);
 
+    private int DISPLAY_X = 200;
+    private int DISPLAY_Y = 200;
+    private int DISPLAY_WIDTH = 400;
+    private int DISPLAY_HEIGHT = 400;
 
     public static void main(String[] args) {
         Window w = new Window();
@@ -20,7 +24,9 @@ public class Window extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WINDOW_DIMENSION);
         Display d = new Display();
+        d.setBounds(DISPLAY_X, DISPLAY_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
         frame.add(d);
+        
         frame.setVisible(true);
 
         // d.getWorld().addParticle(new Particle(0, 11, 0));
