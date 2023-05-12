@@ -2,9 +2,9 @@ import java.util.List;
 
 public class Physics {
     private final double UPDATE_DISTANCE = 50;
-    private final double STEP = .5;
-    private final double REPULSION_TOLERANCE = 1;
-    private final double FORCE_SCALE = .5;
+    private final double STEP = 0.1;
+    private final double REPULSION_TOLERANCE = 10;
+    private final double FORCE_SCALE = 0.001;
     private double[][] rule;
     
     public Physics(int types) {

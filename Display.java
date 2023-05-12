@@ -70,10 +70,10 @@ public class Display extends JPanel {
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= Math.PI/100;
+                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] += Math.PI/100;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] +=Math.PI/100;
+                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] -=Math.PI/100;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                     cam.getInfo()[Camera.ROTATION][Camera.YAW] += Math.PI/100;
@@ -100,7 +100,7 @@ public class Display extends JPanel {
 
                 cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
                 cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
-                //if (world.getParticles().size() < 10) world.addParticle(new Particle());
+                if (world.getParticles().size() < 1000) world.addParticle(new Particle());
                 //System.out.println(cam);
                 renderParticles();
             }
@@ -109,21 +109,32 @@ public class Display extends JPanel {
 
     public void renderParticles() {
         //long start = System.currentTimeMillis();
+        //setBounds(100, 0, 400, 400);
         cam.update();
         Graphics g = getGraphics();
-        g.setColor(Color.black);
-        //g.fillRect(getX(), getY(), getWidth(), getHeight());
-        g.fillRect((int) getBounds().getX(), 100, 100, 100);//(int) getBounds().getY(), (int) getBounds().getWidth(), (int) getBounds().getHeight());
-        g.setColor(Color.white);
         Rectangle bounds = getBounds();
+
+        g.setColor(Color.black);
+        g.fillRect(getX(), getY(), getWidth(), getHeight());
+        g.fillRect((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
+        
+        boolean horizontalDisplay = bounds.getWidth() >= bounds.getHeight();
+        double displayRatio = horizontalDisplay ? bounds.getHeight() / bounds.getWidth() : bounds.getWidth() / bounds.getHeight();
+        double longDimension = (horizontalDisplay ?bounds.getWidth() : bounds.getHeight());
+
+        g.setColor(Color.white);
         for (int i = 0; i < world.getParticles().size(); i++) {
             Particle p = world.getParticles().get(i);
             RenderedParticle particlePosition = cam.renderParticle(p);
-            if (particlePosition != null) {
+            
+            if (particlePosition != null && (horizontalDisplay ? 
+            Math.abs(particlePosition.getZ()) < displayRatio : 
+            Math.abs(particlePosition.getX()) < displayRatio)) {
+                
                 int size = particlePosition.getRenderedSize();
                 g.fillOval(
-                    (int) (bounds.getCenterX() + bounds.getWidth() * particlePosition.getX()), 
-                    (int) (bounds.getCenterY() + bounds.getHeight() * particlePosition.getZ()), 
+                    (int) (bounds.getCenterX() + longDimension * particlePosition.getX()), 
+                    (int) (bounds.getCenterY() + longDimension * particlePosition.getZ()), 
                     size, size);
                 //g.drawString(i + "", particlePosition.getX() + 10, particlePosition.getZ() - 10);
             }

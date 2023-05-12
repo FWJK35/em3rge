@@ -1,7 +1,9 @@
-import java.awt.Point;
-import java.util.Arrays;
-
 public class Camera {
+
+    //math constants
+    private static final double halfPi = Math.PI * 0.5;
+    private static final double root3 = Math.sqrt(3);
+    private static final double root3inverse = 1/Math.sqrt(3);
 
     public static final int X = 0;
     public static final int Y = 1;
@@ -12,9 +14,9 @@ public class Camera {
     public static final int ROTATION = 1;
 
     public static final double FOCAL_LENGTH = 5;
-    public static final double WIDTH = FOCAL_LENGTH * Math.sqrt(3);
-    public static final double HEIGHT = FOCAL_LENGTH * Math.sqrt(3);
-    public static final double RENDER_DISTANCE = World.SIZE / Math.sqrt(3);
+    public static final double WIDTH = FOCAL_LENGTH * root3;
+    public static final double HEIGHT = FOCAL_LENGTH * root3;
+    public static final double RENDER_DISTANCE = World.SIZE / root3;
     
 
     //camera info
@@ -30,9 +32,6 @@ public class Camera {
     private double SIN_PITCH;
     private double COS_PITCH;
     private double[] focusPoint;
-
-    //math constants
-    private final double halfPi = Math.PI * 0.5;
 
 
     public Camera() {
@@ -84,26 +83,18 @@ public class Camera {
             return null;
         }
 
-        double screenX = FOCAL_LENGTH * -newY / newX;
-        double screenZ = FOCAL_LENGTH * -newZ / newX;
+
+        //TODO make factors variables
+        double screenX = root3inverse * -newY / newX;
+        double screenZ = root3inverse * -newZ / newX;
 
         if (p.getType() == -1) System.out.println(newX + " " + newY + " " + newZ);
-
-        screenX += WIDTH * 0.5;
-        screenZ += HEIGHT * 0.5;
         
-        if (screenZ < 0 || screenZ > HEIGHT || screenX < 0 || screenX > WIDTH) {
+        if (Math.abs(screenZ) > 1 || Math.abs(screenX) > 1) {
             return null;
         }
 
-        screenX /= WIDTH;
-        screenZ /= HEIGHT;
-
-        return new RenderedParticle(
-            (int) (screenX * Window.DISPLAY_DIMENSION.getWidth()), 
-            (int) (screenZ * Window.DISPLAY_DIMENSION.getHeight()),
-            Math.sqrt(newX * newX + newY * newY + newZ * newZ)
-        );
+        return new RenderedParticle(screenX, screenZ, Math.sqrt(newX * newX + newY * newY + newZ * newZ));
     }
 
     public void calculateFocusPoint() {
@@ -129,14 +120,15 @@ public class Camera {
     public void update() {
         for (int i = 0; i < World.dimensions; i++) {
             position[i] %= World.SIZE;
+            if (position[i] < 0) position[i] += World.SIZE;
         }
 
-        if (rotation[PITCH] > Math.PI / 2) {
-            rotation[PITCH] = Math.PI / 2;
-        }
-        if (rotation[PITCH] < -Math.PI / 2) {
-            rotation[PITCH] = -Math.PI / 2;
-        }
+        // if (rotation[PITCH] > Math.PI / 2) {
+        //     rotation[PITCH] = Math.PI / 2;
+        // }
+        // if (rotation[PITCH] < -Math.PI / 2) {
+        //     rotation[PITCH] = -Math.PI / 2;
+        // }
 
         rotation[YAW] %= 2 * Math.PI;
         rotation[PITCH] %= 2 * Math.PI;

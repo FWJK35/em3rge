@@ -2,27 +2,26 @@ public class RenderedParticle {
 
     public static final double PARTICLE_SIZE = 50.0;
 
-    private int screenX;
-    private int screenZ;
+    private double screenX;
+    private double screenZ;
     private double dist;
     private int renderedSize;
     private double renderedOpacity;
 
 
 
-    public RenderedParticle(int screenX, int screenZ, double dist) {
+    public RenderedParticle(double screenX, double screenZ, double dist) {
         this.screenX = screenX;
         this.screenZ = screenZ;
         this.dist = dist;
         this.renderedSize = (int) (PARTICLE_SIZE * Camera.FOCAL_LENGTH / (Camera.FOCAL_LENGTH + dist));
-
     }
 
-    public int getX() {
+    public double getX() {
         return screenX;
     }
 
-    public int getZ() {
+    public double getZ() {
         return screenZ;
     }
 
