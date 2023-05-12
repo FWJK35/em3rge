@@ -4,10 +4,13 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 
@@ -28,6 +31,7 @@ public class Display extends JPanel {
             e.printStackTrace();
         }
         setFocusable(true);
+        setBounds(100, 100, 400, 400);
         
         addKeyListener(new KeyAdapter() {
             @Override

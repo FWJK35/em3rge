@@ -4,7 +4,7 @@
 
 public class Particle {
     public static final int RADIUS = 2;
-    private static final double FRICTION = .1;
+
 
     private double[] position;
     private double[] velocity;
@@ -58,19 +58,21 @@ public class Particle {
         return type;
     }
 
-    public void addVelocity(int i, double addend) {
-        velocity[i] += addend;
+    public double velocityFriction(int i, double friction) {
+        velocity[i] *= 1 - friction;
+        return velocity[i];
     }
 
-    public void updatePosition() {
-        for (int i = 0; i < World.dimensions; i++) {
-            velocity[i] *= 1 - FRICTION;
-            position[i] = (position[i] + velocity[i]) % World.SIZE;
+    public void addPosition(int i, double addend) {
+        position[i] = (position[i] + addend) % World.SIZE;
 
-            if (position[i] < 0) {
-                position[i] += World.SIZE;
-            }
+        if (position[i] < World.SIZE) {
+            position[i] += World.SIZE;
         }
+    }
+
+    public void addVelocity(int i, double addend) {
+        velocity[i] += addend;
     }
 
     // returns the squared Euclidean distance to a different
