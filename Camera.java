@@ -51,26 +51,6 @@ public class Camera {
         //TODO properly modify relative position
         double[] worldDist = p.distance(position);
 
-        /*
-        //wrap X coordinate
-        if (Math.abs(rotation[YAW]) < halfPi) {
-            if (worldDist[0] < 0) worldDist[0] += World.SIZE;
-        }
-        else {
-            if (worldDist[0] > 0) worldDist[0] -= World.SIZE;
-        }
-
-        //wrap Y coordinate
-        if (rotation[YAW] > 0) {
-            if (worldDist[1] < 0) worldDist[1] += World.SIZE;
-        }
-        else {
-            if (worldDist[1] > 0) worldDist[1] -= World.SIZE;
-        }
-
-        //wrap Z coordinate
-        */
-
         //rotate by -yaw
         double newX = (worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW);
         double newY = (worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW);
@@ -78,17 +58,12 @@ public class Camera {
         double newZ = (worldDist[Z] * COS_PITCH - newX * SIN_PITCH);
         newX = (newX * COS_PITCH + worldDist[Z] * SIN_PITCH);
         
-        if (p.getType() == -1) System.out.println(newX + " " + newY + " " + newZ);
         if (newX < 0) {
             return null;
         }
 
-
-        //TODO make factors variables
         double screenX = root3inverse * -newY / newX;
         double screenZ = root3inverse * -newZ / newX;
-
-        if (p.getType() == -1) System.out.println(newX + " " + newY + " " + newZ);
         
         if (Math.abs(screenZ) > 1 || Math.abs(screenX) > 1) {
             return null;

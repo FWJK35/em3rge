@@ -1,7 +1,7 @@
 import java.util.List;
 
 public class Physics {
-    private final double UPDATE_DISTANCE = 50;
+    private final double UPDATE_DISTANCE = 20;
     private final double REPULSION_TOLERANCE = 10;
     private final double FORCE_SCALE = 0.001;
     private final double FRICTION = .1;

@@ -55,31 +55,58 @@ public class Window extends JPanel {
         // d.getWorld().addParticle(new Particle(12, 2, 2));
 
         World w = d.getWorld();
-        double radius = 25;
-        int pcount = 0;
-        for (double p = Math.PI/2; p > -Math.PI/2; p -= Math.PI/12) {
-            double pcos = Math.cos(p);
-            double psin = Math.sin(p);
-            for (double y = Math.PI; y > -Math.PI; y -= Math.PI/12) {
-                double ycos = Math.cos(y);
-                double ysin = Math.sin(y);
+        // double radius = 25;
+        // int pcount = 0;
+        // for (double p = Math.PI/2; p > -Math.PI/2; p -= Math.PI/12) {
+        //     double pcos = Math.cos(p);
+        //     double psin = Math.sin(p);
+        //     for (double y = Math.PI; y > -Math.PI; y -= Math.PI/12) {
+        //         double ycos = Math.cos(y);
+        //         double ysin = Math.sin(y);
 
-                double xOffset = radius * pcos * ycos;
-                double yOffset = radius * pcos * ysin;
-                double zOffset = radius * psin;
-                w.addParticle(new Particle(
-                    World.SIZE / 2 + xOffset,
-                    World.SIZE / 2 + yOffset,
-                    World.SIZE / 2 + zOffset
-                ));
-                pcount++;
-            }
+        //         double xOffset = radius * pcos * ycos;
+        //         double yOffset = radius * pcos * ysin;
+        //         double zOffset = radius * psin;
+        //         w.addParticle(new Particle(
+        //             World.SIZE / 2 + xOffset,
+        //             World.SIZE / 2 + yOffset,
+        //             World.SIZE / 2 + zOffset
+        //         ));
+        //         pcount++;
+        //     }
+        // }
+        // System.out.println("done: " + pcount);
+
+        for (int p = 0; p < 1000; p++) {
+            w.addParticle(new Particle());
         }
-        System.out.println("done: " + pcount);
-        //System.out.println(d.getWorld().getParticles());
 
         
 
         d.renderParticles();
+        int frameLength = 40;
+        long startTime = System.currentTimeMillis() + frameLength;
+        
+
+        while (true) { // keep running
+
+            // update game logic based on time passed
+            w.updateParticles();
+
+            // update game logic once for every tick passed\
+            int waitcount = 0;
+            while (System.currentTimeMillis() < startTime) {
+                System.out.println("waiting: " + waitcount);
+                waitcount++;
+                //d.renderParticles();
+            }
+            // update timing
+            startTime = System.currentTimeMillis() + frameLength;
+
+            // draw screen content
+            d.renderParticles();
+
+            
+        }
     }
 }
