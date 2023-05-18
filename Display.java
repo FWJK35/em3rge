@@ -42,12 +42,17 @@ public class Display extends JPanel {
                     world.updateParticles();
                 }
 
-                if (e.getKeyCode() == KeyEvent.VK_R) {
+                if (e.getKeyCode() == KeyEvent.VK_C) {
                     cam.getInfo()[Camera.POSITION][Camera.X] = 0;
                     cam.getInfo()[Camera.POSITION][Camera.Y] = 50;
                     cam.getInfo()[Camera.POSITION][Camera.Z] = 50;
                     cam.getInfo()[Camera.ROTATION][Camera.PITCH] = 0;
                     cam.getInfo()[Camera.ROTATION][Camera.YAW] = 0;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_R) {
+                    for (int p = 0; p < 1000; p++) {
+                        world.getParticles().set(p, new Particle());
+                    }
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -159,6 +164,10 @@ public class Display extends JPanel {
 
     public World getWorld() {
         return world;
+    }
+
+    public Camera getCamera() {
+        return cam;
     }
 
     public void paint(Graphics g) {

@@ -2,7 +2,7 @@ import java.util.List;
 
 public class Physics {
     private final double UPDATE_DISTANCE = 20;
-    private final double REPULSION_TOLERANCE = 10;
+    private final double REPULSION_TOLERANCE = 5;
     private final double FORCE_SCALE = 0.001;
     private final double FRICTION = .1;
     private double[][] rule;
@@ -22,6 +22,17 @@ public class Physics {
         for (Particle p : particles) {
             for (int i = 0; i < World.dimensions; i++) {
                 p.addPosition(i, p.velocityFriction(i, FRICTION));
+            }
+        }
+    }
+
+    // approximates a few iterations' worth of updates by keeping same velocity
+    public void updateParticles(List<Particle> particles, int iterations) {
+        updateVelocity(particles);
+        // decelerates velocity by multiplying FRICTION every tick and updates position
+        for (Particle p : particles) {
+            for (int i = 0; i < World.dimensions; i++) {
+                p.addPosition(i, iterations * p.velocityFriction(i, FRICTION));
             }
         }
     }

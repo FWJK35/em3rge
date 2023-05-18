@@ -96,8 +96,9 @@ public class Window extends JPanel {
             // update game logic once for every tick passed\
             int waitcount = 0;
             while (System.currentTimeMillis() < startTime) {
-                System.out.println("waiting: " + waitcount);
-                waitcount++;
+                //System.out.println("waiting: " + waitcount);
+                //waitcount++;
+                System.out.println(d.getCamera());
                 //d.renderParticles();
             }
             // update timing

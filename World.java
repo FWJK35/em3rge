@@ -18,7 +18,7 @@ public class World {
     }
 
     public void updateParticles() {
-        physics.updateParticles(particles);
+        physics.updateParticles(particles, 1);
     }
 
     public void addParticle(Particle p) {
