@@ -1,17 +1,18 @@
 import java.util.List;
 
 public class Physics {
-    private final double UPDATE_DISTANCE = 20;
-    private final double REPULSION_TOLERANCE = 5;
-    private final double FORCE_SCALE = 0.001;
+    private final double UPDATE_DISTANCE = 30;
+    private final double REPULSION_TOLERANCE = 1;
+    private final double FORCE_SCALE = 0.01;
     private final double FRICTION = .1;
     private double[][] rule;
     
-    public Physics(int types) {
+    public Physics() {
+        int types = Particle.getTypes();
         rule = new double[types][types];
         for (int i = 0; i < types; i++) {
             for (int j = 0; j < types; j++) {
-                rule[i][j] = .25;
+                rule[i][j] = Math.random()*2 - 1;
             }
         }
     }

@@ -152,6 +152,7 @@ public class Display extends JPanel {
             RenderedParticle particlePosition = rendered[i];
             if (particlePosition != null) {
                 int size = particlePosition.getRenderedSize();
+                g.setColor(particlePosition.getColor());
                 g.fillOval(
                     (int) (bounds.getCenterX() + longDimension * particlePosition.getX() - size/2.0), 
                     (int) (bounds.getCenterY() + longDimension * particlePosition.getZ() - size/2.0), 

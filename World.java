@@ -10,7 +10,7 @@ public class World {
 
     public World() {
         particles = new ArrayList<Particle>();
-        physics = new Physics(1);
+        physics = new Physics();
     }
 
     public ArrayList<Particle> getParticles() {

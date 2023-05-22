@@ -69,7 +69,7 @@ public class Camera {
             return null;
         }
 
-        return new RenderedParticle(screenX, screenZ, Math.sqrt(newX * newX + newY * newY + newZ * newZ));
+        return new RenderedParticle(screenX, screenZ, Math.sqrt(newX * newX + newY * newY + newZ * newZ), p.getType());
     }
 
     public void calculateFocusPoint() {

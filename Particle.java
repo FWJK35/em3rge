@@ -4,15 +4,14 @@
 
 public class Particle {
     public static final int RADIUS = 2;
-
-
     private double[] position;
     private double[] velocity;
+    private static int types = 100;
     private int type;
 
     // constructors
     public Particle() {
-        type = 0;
+        type = (int) (Math.random() * types);
 
         //randomly generate position and set velocity to 0
         this.position = new double[World.dimensions];
@@ -56,6 +55,15 @@ public class Particle {
 
     public int getType() {
         return type;
+    }
+
+    public static int getTypes() {
+        return types;
+    }
+
+    // mutator methods
+    public static void setTypes(int types) {
+        Particle.types = types;
     }
 
     public double velocityFriction(int i, double friction) {
