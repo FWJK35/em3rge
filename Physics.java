@@ -1,9 +1,16 @@
+/* 
+ * Physics class determines calculations and rulesets for
+ * interacting Particles within range. Acceleration follows
+ * linear pattern, increasing from negative to positive within
+ * certain bounds and then decreasing up to the edge of range
+ */
+
 import java.util.List;
 
 public class Physics {
     private final double UPDATE_DISTANCE = 30;
     private final double REPULSION_TOLERANCE = 1;
-    private final double FORCE_SCALE = 0.01;
+    private final double FORCE_SCALE = 0.001;
     private final double FRICTION = .1;
     private double[][] rule;
     

@@ -19,7 +19,7 @@ public class Window extends JPanel {
     public static final int DISPLAY_WIDTH = 400;
     public static final int DISPLAY_HEIGHT = 400;
 
-    
+    public static final int FRAME_LENGTH = 10;
 
 
     public static void main(String[] args) {
@@ -27,10 +27,13 @@ public class Window extends JPanel {
     }
 
     public Window() {
+        JPanel panel = new JPanel("em3rge", new GridBagLayout());
         JFrame frame = new JFrame("em3rge");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         Display d = new Display();
+        d.setLayout(null);
+        d.setBounds(DISPLAY_X, DISPLAY_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
         frame.add(d);
         
         frame.setVisible(true);
@@ -40,19 +43,6 @@ public class Window extends JPanel {
                 
             }
         });
-
-        // d.getWorld().addParticle(new Particle(0, 11, 0));
-        // d.getWorld().addParticle(new Particle(0, 10, 0));
-        // d.getWorld().addParticle(new Particle(11, 1, 1, -1));
-        
-        // d.getWorld().addParticle(new Particle(10, 0, 0));
-        // d.getWorld().addParticle(new Particle(10, 2, 0));
-        // d.getWorld().addParticle(new Particle(12, 0, 0));
-        // d.getWorld().addParticle(new Particle(12, 2, 0));
-        // d.getWorld().addParticle(new Particle(10, 0, 2));
-        // d.getWorld().addParticle(new Particle(10, 2, 2));
-        // d.getWorld().addParticle(new Particle(12, 0, 2));
-        // d.getWorld().addParticle(new Particle(12, 2, 2));
 
         World w = d.getWorld();
         // double radius = 25;
@@ -81,32 +71,22 @@ public class Window extends JPanel {
             w.addParticle(new Particle());
         }
 
-        
-
+    
         d.renderParticles();
-        int frameLength = 40;
-        long startTime = System.currentTimeMillis() + frameLength;
-        
-
         while (true) { // keep running
 
             // update game logic based on time passed
             w.updateParticles();
-
+            d.renderParticles();
             // update game logic once for every tick passed\
             int waitcount = 0;
+            long startTime = System.currentTimeMillis() + FRAME_LENGTH;
             while (System.currentTimeMillis() < startTime) {
-                //System.out.println("waiting: " + waitcount);
-                //waitcount++;
-                System.out.println(d.getCamera());
+                System.out.println("waiting: " + waitcount);
+                waitcount++;
+                //System.out.println(d.getCamera());
                 //d.renderParticles();
             }
-            // update timing
-            startTime = System.currentTimeMillis() + frameLength;
-
-            // draw screen content
-            d.renderParticles();
-
             
         }
     }

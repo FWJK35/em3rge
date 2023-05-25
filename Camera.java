@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 public class Camera {
 
     //math constants
@@ -50,6 +54,7 @@ public class Camera {
     public RenderedParticle renderParticle(Particle p) {
         //TODO properly modify relative position
         double[] worldDist = p.distance(position);
+        //System.out.println(Arrays.toString(p.getPosition()) + Arrays.toString(position) + Arrays.toString(worldDist));
 
         //rotate by -yaw
         double newX = (worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW);

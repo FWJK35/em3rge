@@ -1,3 +1,7 @@
+/*
+ * 
+ */
+
 import java.awt.Color;
 
 public class RenderedParticle {
@@ -8,7 +12,6 @@ public class RenderedParticle {
     private double screenZ;
     private double dist;
     private int renderedSize;
-    private double renderedOpacity;
     private Color color;
 
 

@@ -6,7 +6,7 @@ public class Particle {
     public static final int RADIUS = 2;
     private double[] position;
     private double[] velocity;
-    private static int types = 100;
+    private static int types = 3;
     private int type;
 
     // constructors
@@ -74,7 +74,7 @@ public class Particle {
     public void addPosition(int i, double addend) {
         position[i] = (position[i] + addend) % World.SIZE;
 
-        if (position[i] < World.SIZE) {
+        if (position[i] < 0) {
             position[i] += World.SIZE;
         }
     }
@@ -115,6 +115,7 @@ public class Particle {
     }
 
     public String toString() {
-        return "{ Position: (X: " + position[0] + ", Y: " + position[1] + ", Z: " + position[2] + "), Velocity: (X: " + velocity[0] + ", Y: " + velocity[1] + ", Z: " + velocity[2] + ")";
+        return "{ Position: (X: " + position[0] + ", Y: " + position[1] + ", Z: " + position[2] + "), " + 
+        "Velocity: (X: " + velocity[0] + ", Y: " + velocity[1] + ", Z: " + velocity[2] + ")";
     }
 }
