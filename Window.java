@@ -1,5 +1,7 @@
 /*
- * 
+ * The Window class holds the code for the frontend and UI
+ * for the project, as well as controlling particle generation
+ * and interaction speed. 
  */
 
 import java.awt.*;
@@ -7,7 +9,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class Window extends JPanel {
+public class Window extends JFrame {
 
     public static final int WINDOW_WIDTH = 1920;
     public static final int WINDOW_HEIGHT = 1080;
@@ -27,18 +29,24 @@ public class Window extends JPanel {
     }
 
     public Window() {
-        JPanel panel = new JPanel("em3rge", new GridBagLayout());
-        JFrame frame = new JFrame("em3rge");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        Display d = new Display();
-        d.setLayout(null);
-        d.setBounds(DISPLAY_X, DISPLAY_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-        frame.add(d);
+        super("em3rge");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
         
-        frame.setVisible(true);
+        Display d = new Display();
+        c.weightx = 0.5;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        //d.setBounds(DISPLAY_X, DISPLAY_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        JButton b = new JButton();
+        add(d, c);
+        
+        setVisible(true);
 
-        frame.addComponentListener(new ComponentAdapter() {
+        addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 
             }

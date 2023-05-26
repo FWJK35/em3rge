@@ -118,14 +118,10 @@ public class Display extends JPanel {
     }
 
     public void renderParticles() {
-        //long start = System.currentTimeMillis();
-        //setBounds(100, 0, 400, 400);
         cam.update();
         Graphics g = getGraphics();
         Rectangle bounds = getBounds();
 
-        
-        
         boolean horizontalDisplay = bounds.getWidth() >= bounds.getHeight();
         double displayRatio = horizontalDisplay ? bounds.getHeight() / bounds.getWidth() : bounds.getWidth() / bounds.getHeight();
         double longDimension = (horizontalDisplay ?bounds.getWidth() : bounds.getHeight());
@@ -172,6 +168,12 @@ public class Display extends JPanel {
     }
 
     public void paint(Graphics g) {
-        
+        super.paint(g);
+        renderParticles();
+    }
+
+    public void repaint(Graphics g) {
+        super.repaint();
+        renderParticles();
     }
 }
