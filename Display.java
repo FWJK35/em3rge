@@ -33,7 +33,7 @@ public class Display extends JPanel {
             e.printStackTrace();
         }
         setFocusable(true);
-        
+        //TODO fix keys
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -101,13 +101,12 @@ public class Display extends JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 Point center = new Point(
-                    getLocationOnScreen().x + getWidth() / 2, 
-                    getLocationOnScreen().y + getHeight() / 2
+                    (int) getLocationOnScreen().getX() + getWidth() / 2, 
+                    (int) getLocationOnScreen().getY() + getHeight() / 2
                 );
 
-                robot.mouseMove(center.x, center.y);
-                setCursor(null);
-
+                robot.mouseMove((int) center.getX(), (int) center.getY());
+                
                 cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
                 cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
                 //System.out.println(cam);
@@ -120,11 +119,9 @@ public class Display extends JPanel {
     public void renderParticles() {
         cam.update();
         Graphics g = getGraphics();
-        Rectangle bounds = getBounds();
-
-        boolean horizontalDisplay = bounds.getWidth() >= bounds.getHeight();
-        double displayRatio = horizontalDisplay ? bounds.getHeight() / bounds.getWidth() : bounds.getWidth() / bounds.getHeight();
-        double longDimension = (horizontalDisplay ?bounds.getWidth() : bounds.getHeight());
+        boolean horizontalDisplay = getWidth() >= getHeight();
+        double displayRatio = horizontalDisplay ? (double) getHeight() / getWidth() : (double) getWidth() / getHeight();
+        double longDimension = (horizontalDisplay ? getWidth() : getHeight());
 
         //prerender particles
         ArrayList<Particle> particles = world.getParticles();
@@ -141,17 +138,16 @@ public class Display extends JPanel {
         }
 
         g.setColor(Color.black);
-        g.fillRect(getX(), getY(), getWidth(), getHeight());
-        g.fillRect((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
-        g.setColor(Color.white);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.fillOval(0, 0, 10, 10);
         for (int i = 0; i < rendered.length; i++) {
             RenderedParticle particlePosition = rendered[i];
             if (particlePosition != null) {
                 int size = particlePosition.getRenderedSize();
                 g.setColor(particlePosition.getColor());
                 g.fillOval(
-                    (int) (bounds.getCenterX() + longDimension * particlePosition.getX() - size/2.0), 
-                    (int) (bounds.getCenterY() + longDimension * particlePosition.getZ() - size/2.0), 
+                    (int) (getWidth() / 2 + longDimension * particlePosition.getX() - size/2.0), 
+                    (int) (getHeight() / 2 + longDimension * particlePosition.getZ() - size/2.0), 
                     size, size
                 );
             }

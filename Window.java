@@ -33,17 +33,29 @@ public class Window extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        
+
+        //add display
         Display d = new Display();
-        c.weightx = 0.5;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        //d.setBounds(DISPLAY_X, DISPLAY_Y, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-        JButton b = new JButton();
-        add(d, c);
-        
+        GridBagConstraints displayConstraints = new GridBagConstraints();
+        displayConstraints.fill = GridBagConstraints.BOTH;
+        displayConstraints.weightx = 1;
+        displayConstraints.weighty = 1;
+        displayConstraints.gridx = 1;
+        displayConstraints.gridy = 0;
+        displayConstraints.gridheight = 2;
+        add(d, displayConstraints);
+
+        //add attraction rules
+        JButton rules = new JButton();
+        rules.setSize(50, 50);
+        GridBagConstraints rulesConstraints = new GridBagConstraints();
+        rulesConstraints.fill = GridBagConstraints.VERTICAL;
+        rulesConstraints.weightx = 0.5;
+        rulesConstraints.weighty = 0.5;
+        rulesConstraints.gridx = 0;
+        rulesConstraints.gridy = 0;
+        add(rules, rulesConstraints);
+
         setVisible(true);
 
         addComponentListener(new ComponentAdapter() {
@@ -90,7 +102,7 @@ public class Window extends JFrame {
             int waitcount = 0;
             long startTime = System.currentTimeMillis() + FRAME_LENGTH;
             while (System.currentTimeMillis() < startTime) {
-                System.out.println("waiting: " + waitcount);
+                //System.out.println("waiting: " + waitcount);
                 waitcount++;
                 //System.out.println(d.getCamera());
                 //d.renderParticles();
