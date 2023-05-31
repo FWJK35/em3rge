@@ -1,36 +1,40 @@
 public class LinearPhysics extends Physics {
-    private double[][] rule;
+    private double[][] rules;
 
     // constructor
-    public LinearPhysics(int types) {
+    public LinearPhysics() {
         super();
+    }
 
-        rule = new double[types][types];
+    public LinearPhysics(int types) {
+        super(types);
+
+        rules = new double[types][types];
         for (int i = 0; i < types; i++) {
             for (int j = 0; j < types; j++) {
-                rule[i][j] = Math.random()*2 - 1;
+                rules[i][j] = Math.random()*2 - 1;
             }
         }
     }
     
     // accessors
-    public double[][] getRule() {
-        return rule;
+    public double[][] getRules() {
+        return rules;
     }
-    public double[] getRule(int i) {
-        return rule[i];
+    public double[] getRules(int i) {
+        return rules[i];
     }
-    public double getRule(int i, int j) {
-        return rule[i][j];
+    public double getRules(int i, int j) {
+        return rules[i][j];
     }
 
     // mutators
     public void increment(int i, int j, double step) {
-        rule[i][j] += step;
+        rules[i][j] += step;
     }
 
     public void decrement(int i, int j, double step) {
-        rule[i][j] -= step;
+        rules[i][j] -= step;
     }    
     
 
@@ -43,10 +47,10 @@ public class LinearPhysics extends Physics {
                 return realDist / getRepulsionTolerance();
             }
             else if (realDist < (getUpdateDistance() + getRepulsionTolerance()) * 0.5) {
-                return realDist / (getUpdateDistance() - getRepulsionTolerance()) * getRule(a.getType(), b.getType());
+                return realDist / (getUpdateDistance() - getRepulsionTolerance()) * getRules(a.getType(), b.getType());
             }
             else if (realDist < getUpdateDistance()) {
-                return (1 - realDist / (getUpdateDistance() - getRepulsionTolerance())) * getRule(a.getType(), b.getType());
+                return (1 - realDist / (getUpdateDistance() - getRepulsionTolerance())) * getRules(a.getType(), b.getType());
             }
         }
         return 0;

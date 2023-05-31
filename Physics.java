@@ -8,12 +8,24 @@
 import java.util.List;
 
 public class Physics {
+    private int types = 5;
     private double updateDistance = 30;
     private double repulsionTolerance = 1;
     private double forceScale = 0.001;
     private double friction = .1;
 
+    // constructor
+    public Physics() {
+    }
+
+    public Physics(int types) {
+        this.types = types;
+    }
+
     // accessors
+    public int getTypes() {
+        return types;
+    }
     public double getUpdateDistance() {
         return updateDistance;
     }
@@ -28,16 +40,16 @@ public class Physics {
     }
 
     // mutators
-    public void getUpdateDistance(double updateDistance) {
+    public void setUpdateDistance(double updateDistance) {
         this.updateDistance = updateDistance;
     }
-    public void getRepulsionTolerance(double repulsionTolerance) {
+    public void setRepulsionTolerance(double repulsionTolerance) {
         this.repulsionTolerance = repulsionTolerance;
     }
-    public void getForceScale(double forceScale) {
+    public void setForceScale(double forceScale) {
         this.forceScale = forceScale;
     }
-    public void getfriction(double friction) {
+    public void setfriction(double friction) {
         this.friction = friction;
     }
 

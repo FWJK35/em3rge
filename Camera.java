@@ -62,13 +62,13 @@ public class Camera {
         //rotate by -pitch
         double newZ = (worldDist[Z] * COS_PITCH - newX * SIN_PITCH);
         newX = (newX * COS_PITCH + worldDist[Z] * SIN_PITCH);
-        
+        double newXInverse = 1 / newX;
         if (newX < 0) {
             return null;
         }
 
-        double screenX = root3inverse * -newY / newX;
-        double screenZ = root3inverse * -newZ / newX;
+        double screenX = root3inverse * -newY * newXInverse;
+        double screenZ = root3inverse * -newZ * newXInverse;
         
         if (Math.abs(screenZ) > 1 || Math.abs(screenX) > 1) {
             return null;
@@ -111,7 +111,9 @@ public class Camera {
         // }
 
         rotation[YAW] %= 2 * Math.PI;
-        rotation[PITCH] %= 2 * Math.PI;
+        if (Math.abs(rotation[PITCH]) > halfPi) {
+            rotation[PITCH] = Math.signum(rotation[PITCH]) * halfPi;
+        }
 
         calculateFocusPoint();
     }

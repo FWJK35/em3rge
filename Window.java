@@ -26,6 +26,7 @@ public class Window extends JFrame {
 
     public static void main(String[] args) {
         Window w = new Window();
+        w.setVisible(true);
     }
 
     public Window() {
@@ -33,6 +34,7 @@ public class Window extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLayout(new GridBagLayout());
+        setFocusable(true);
 
         //add display
         Display d = new Display();
@@ -46,19 +48,28 @@ public class Window extends JFrame {
         displayConstraints.gridheight = 2;
         getContentPane().add(d, displayConstraints);
         d.initialize();
+        addKeyListener(d.getKeyAdapter());
         d.requestFocusInWindow();
 
-        //add attraction rules
-        JButton rules = new JButton();
-        rules.setSize(50, 50);
+        //add attraction rules controls
+        Rules rules = new Rules(d.getWorld());
         GridBagConstraints rulesConstraints = new GridBagConstraints();
-        rulesConstraints.fill = GridBagConstraints.VERTICAL;
-        rulesConstraints.weightx = 0.5;
+        rulesConstraints.fill = GridBagConstraints.BOTH;
+        rulesConstraints.weightx = 0.3;
         rulesConstraints.weighty = 0.5;
         rulesConstraints.gridx = 0;
         rulesConstraints.gridy = 0;
         getContentPane().add(rules, rulesConstraints);
-        setVisible(true);
+
+        JButton controls = new JButton();
+        controls.setSize(100, 100);
+        GridBagConstraints controlsConstraints = new GridBagConstraints();
+        controlsConstraints.fill = GridBagConstraints.BOTH;
+        controlsConstraints.weightx = 0.3;
+        controlsConstraints.weighty = 0.5;
+        controlsConstraints.gridx = 0;
+        controlsConstraints.gridy = 1;
+        getContentPane().add(controls, controlsConstraints);
 
         World w = d.getWorld();
         /*double radius = 25;

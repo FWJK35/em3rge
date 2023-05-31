@@ -17,6 +17,10 @@ public class World {
         physics = new LinearPhysics(Particle.getTypes());
     }
 
+    public Physics getPhysics() {
+        return physics;
+    }
+
     public ArrayList<Particle> getParticles() {
         return particles;
     }

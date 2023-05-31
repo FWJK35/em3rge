@@ -35,9 +35,66 @@ public class Display extends JPanel {
     public void initialize() {
         setFocusable(true);
         setEnabled(true);
-        requestFocus();
-        //TODO fix keys
-        addKeyListener(new KeyAdapter() {
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Point center = new Point(
+                    (int) getLocationOnScreen().getX() + getWidth() / 2, 
+                    (int) getLocationOnScreen().getY() + getHeight() / 2
+                );
+
+                robot.mouseMove((int) center.getX(), (int) center.getY());
+                
+                cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
+                cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
+                //renderParticles();
+            }
+        });
+
+    }
+
+    public void renderParticles() {
+        cam.update();
+        Graphics g = getGraphics();
+        boolean horizontalDisplay = getWidth() >= getHeight();
+        double displayRatio = horizontalDisplay ? (double) getHeight() / getWidth() : (double) getWidth() / getHeight();
+        double longDimension = (horizontalDisplay ? getWidth() : getHeight());
+
+        //prerender particles
+        ArrayList<Particle> particles = world.getParticles();
+        RenderedParticle[] rendered = new RenderedParticle[particles.size()];
+        for (int i = 0; i < particles.size(); i++) {
+            Particle p = particles.get(i);
+            RenderedParticle particlePosition = cam.renderParticle(p);
+            rendered[i] = null;
+            if (particlePosition != null && (horizontalDisplay ? 
+            Math.abs(particlePosition.getZ()) < displayRatio : 
+            Math.abs(particlePosition.getX()) < displayRatio)) {
+                rendered[i] = particlePosition;
+            }
+        }
+
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.fillOval(0, 0, 10, 10);
+        for (int i = 0; i < rendered.length; i++) {
+            RenderedParticle particlePosition = rendered[i];
+            if (particlePosition != null) {
+                int size = particlePosition.getRenderedSize();
+                g.setColor(particlePosition.getColor());
+                g.fillOval(
+                    (int) (getWidth() / 2 + longDimension * particlePosition.getX() - size/2.0), 
+                    (int) (getHeight() / 2 + longDimension * particlePosition.getZ() - size/2.0), 
+                    size, size
+                );
+            }
+        }
+        //System.out.println(world.getParticles().size() + " particles at " + (System.currentTimeMillis() - start) + "ms/frame");
+    }
+
+    public KeyAdapter getKeyAdapter() {
+        return new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_U) {
@@ -94,63 +151,7 @@ public class Display extends JPanel {
                     cam.getInfo()[Camera.ROTATION][Camera.YAW] -= Math.PI/100;
                 }
             }
-        });
-
-        addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                Point center = new Point(
-                    (int) getLocationOnScreen().getX() + getWidth() / 2, 
-                    (int) getLocationOnScreen().getY() + getHeight() / 2
-                );
-
-                robot.mouseMove((int) center.getX(), (int) center.getY());
-                
-                cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
-                cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
-                //renderParticles();
-            }
-        });
-
-    }
-
-    public void renderParticles() {
-        cam.update();
-        Graphics g = getGraphics();
-        boolean horizontalDisplay = getWidth() >= getHeight();
-        double displayRatio = horizontalDisplay ? (double) getHeight() / getWidth() : (double) getWidth() / getHeight();
-        double longDimension = (horizontalDisplay ? getWidth() : getHeight());
-
-        //prerender particles
-        ArrayList<Particle> particles = world.getParticles();
-        RenderedParticle[] rendered = new RenderedParticle[particles.size()];
-        for (int i = 0; i < particles.size(); i++) {
-            Particle p = particles.get(i);
-            RenderedParticle particlePosition = cam.renderParticle(p);
-            rendered[i] = null;
-            if (particlePosition != null && (horizontalDisplay ? 
-            Math.abs(particlePosition.getZ()) < displayRatio : 
-            Math.abs(particlePosition.getX()) < displayRatio)) {
-                rendered[i] = particlePosition;
-            }
-        }
-
-        g.setColor(Color.black);
-        g.fillRect(0, 0, getWidth(), getHeight());
-        g.fillOval(0, 0, 10, 10);
-        for (int i = 0; i < rendered.length; i++) {
-            RenderedParticle particlePosition = rendered[i];
-            if (particlePosition != null) {
-                int size = particlePosition.getRenderedSize();
-                g.setColor(particlePosition.getColor());
-                g.fillOval(
-                    (int) (getWidth() / 2 + longDimension * particlePosition.getX() - size/2.0), 
-                    (int) (getHeight() / 2 + longDimension * particlePosition.getZ() - size/2.0), 
-                    size, size
-                );
-            }
-        }
-        //System.out.println(world.getParticles().size() + " particles at " + (System.currentTimeMillis() - start) + "ms/frame");
+        };
     }
 
     public World getWorld() {

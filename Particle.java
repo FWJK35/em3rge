@@ -6,6 +6,7 @@ public class Particle {
     public static final int RADIUS = 2;
     private double[] position;
     private double[] velocity;
+    // TODO: completely move types over to Physics.java
     private static int types = 3;
     private int type;
 
@@ -107,6 +108,13 @@ public class Particle {
 
     public double[] distance(Particle p) {
         return distance(p.getPosition());
+    }
+
+    public double distance(int i, Particle p) {
+        double di = position[i] - p.getPosition(i);
+        double df = di + (di < 0 ? World.SIZE : -World.SIZE);
+
+        return magMin(di, df);
     }
 
     // returns the minimum of two numbers by magnitude
