@@ -6,7 +6,6 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -32,12 +31,15 @@ public class Display extends JPanel {
         } catch (AWTException e) {
             e.printStackTrace();
         }
+    }
+    public void initialize() {
         setFocusable(true);
+        setEnabled(true);
+        requestFocus();
         //TODO fix keys
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-
                 if (e.getKeyCode() == KeyEvent.VK_U) {
                     world.updateParticles();
                 }
@@ -58,7 +60,6 @@ public class Display extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_W) {
                     cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.getCosYaw();
                     cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.getSinYaw();
-                    
                 }
                 if (e.getKeyCode() == KeyEvent.VK_A) {
                     cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.getSinYaw();
@@ -72,6 +73,7 @@ public class Display extends JPanel {
                     cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.getSinYaw();
                     cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.getCosYaw();
                 }
+
                 if (e.getKeyCode() == KeyEvent.VK_Q) {
                     cam.getInfo()[Camera.POSITION][Camera.Z] += 1;
                 }
@@ -91,9 +93,6 @@ public class Display extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     cam.getInfo()[Camera.ROTATION][Camera.YAW] -= Math.PI/100;
                 }
-                //if (world.getParticles().size() < 1000) world.addParticle(new Particle());
-                //renderParticles();
-                //System.out.println(cam);
             }
         });
 
@@ -109,7 +108,6 @@ public class Display extends JPanel {
                 
                 cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
                 cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
-                //System.out.println(cam);
                 //renderParticles();
             }
         });

@@ -36,6 +36,7 @@ public class Window extends JFrame {
 
         //add display
         Display d = new Display();
+        
         GridBagConstraints displayConstraints = new GridBagConstraints();
         displayConstraints.fill = GridBagConstraints.BOTH;
         displayConstraints.weightx = 1;
@@ -43,7 +44,9 @@ public class Window extends JFrame {
         displayConstraints.gridx = 1;
         displayConstraints.gridy = 0;
         displayConstraints.gridheight = 2;
-        add(d, displayConstraints);
+        getContentPane().add(d, displayConstraints);
+        d.initialize();
+        d.requestFocusInWindow();
 
         //add attraction rules
         JButton rules = new JButton();
@@ -54,60 +57,50 @@ public class Window extends JFrame {
         rulesConstraints.weighty = 0.5;
         rulesConstraints.gridx = 0;
         rulesConstraints.gridy = 0;
-        add(rules, rulesConstraints);
-
+        getContentPane().add(rules, rulesConstraints);
         setVisible(true);
 
-        addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                
-            }
-        });
-
         World w = d.getWorld();
-        // double radius = 25;
-        // int pcount = 0;
-        // for (double p = Math.PI/2; p > -Math.PI/2; p -= Math.PI/12) {
-        //     double pcos = Math.cos(p);
-        //     double psin = Math.sin(p);
-        //     for (double y = Math.PI; y > -Math.PI; y -= Math.PI/12) {
-        //         double ycos = Math.cos(y);
-        //         double ysin = Math.sin(y);
+        /*double radius = 25;
+        int pcount = 0;
+        for (double p = Math.PI/2; p > -Math.PI/2; p -= Math.PI/12) {
+            double pcos = Math.cos(p);
+            double psin = Math.sin(p);
+            for (double y = Math.PI; y > -Math.PI; y -= Math.PI/12) {
+                double ycos = Math.cos(y);
+                double ysin = Math.sin(y);
 
-        //         double xOffset = radius * pcos * ycos;
-        //         double yOffset = radius * pcos * ysin;
-        //         double zOffset = radius * psin;
-        //         w.addParticle(new Particle(
-        //             World.SIZE / 2 + xOffset,
-        //             World.SIZE / 2 + yOffset,
-        //             World.SIZE / 2 + zOffset
-        //         ));
-        //         pcount++;
-        //     }
-        // }
-        // System.out.println("done: " + pcount);
+                double xOffset = radius * pcos * ycos;
+                double yOffset = radius * pcos * ysin;
+                double zOffset = radius * psin;
+                w.addParticle(new Particle(
+                    World.SIZE / 2 + xOffset,
+                    World.SIZE / 2 + yOffset,
+                    World.SIZE / 2 + zOffset
+                ));
+                pcount++;
+            }
+        }
+        System.out.println("done: " + pcount); */
 
         for (int p = 0; p < 1000; p++) {
             w.addParticle(new Particle());
         }
 
-    
-        d.renderParticles();
-        while (true) { // keep running
-
-            // update game logic based on time passed
-            w.updateParticles();
-            d.renderParticles();
-            // update game logic once for every tick passed\
-            int waitcount = 0;
-            long startTime = System.currentTimeMillis() + FRAME_LENGTH;
-            while (System.currentTimeMillis() < startTime) {
-                //System.out.println("waiting: " + waitcount);
-                waitcount++;
-                //System.out.println(d.getCamera());
-                //d.renderParticles();
+        getRootPane().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                System.out.println(e.getKeyChar());
             }
-            
-        }
+        });
+        
+        new Timer(FRAME_LENGTH , new ActionListener() {
+
+            public void actionPerformed(ActionEvent a) {
+                w.updateParticles();
+                d.renderParticles();
+            }
+        }).start();
     }
+    
 }
