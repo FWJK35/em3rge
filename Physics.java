@@ -8,28 +8,45 @@
 import java.util.List;
 
 public class Physics {
-    private final double UPDATE_DISTANCE = 30;
-    private final double REPULSION_TOLERANCE = 1;
-    private final double FORCE_SCALE = 0.001;
-    private final double FRICTION = .1;
-    private double[][] rule;
-    
-    public Physics() {
-        int types = Particle.getTypes();
-        rule = new double[types][types];
-        for (int i = 0; i < types; i++) {
-            for (int j = 0; j < types; j++) {
-                rule[i][j] = Math.random()*2 - 1;
-            }
-        }
+    private double updateDistance = 30;
+    private double repulsionTolerance = 1;
+    private double forceScale = 0.001;
+    private double friction = .1;
+
+    // accessors
+    public double getUpdateDistance() {
+        return updateDistance;
+    }
+    public double getRepulsionTolerance() {
+        return repulsionTolerance;
+    }
+    public double getForceScale() {
+        return forceScale;
+    }
+    public double getfriction() {
+        return friction;
+    }
+
+    // mutators
+    public void getUpdateDistance(double updateDistance) {
+        this.updateDistance = updateDistance;
+    }
+    public void getRepulsionTolerance(double repulsionTolerance) {
+        this.repulsionTolerance = repulsionTolerance;
+    }
+    public void getForceScale(double forceScale) {
+        this.forceScale = forceScale;
+    }
+    public void getfriction(double friction) {
+        this.friction = friction;
     }
 
     public void updateParticles(List<Particle> particles) {
         updateVelocity(particles);
-        // decelerates velocity by multiplying FRICTION every tick and updates position
+        // decelerates velocity by multiplying friction every tick and updates position
         for (Particle p : particles) {
             for (int i = 0; i < World.dimensions; i++) {
-                p.addPosition(i, p.velocityFriction(i, FRICTION));
+                p.addPosition(i, p.velocityFriction(i, friction));
             }
         }
     }
@@ -37,28 +54,15 @@ public class Physics {
     // approximates a few iterations' worth of updates by keeping same velocity
     public void updateParticles(List<Particle> particles, int iterations) {
         updateVelocity(particles);
-        // decelerates velocity by multiplying FRICTION every tick and updates position
+        // decelerates velocity by multiplying friction every tick and updates position
         for (Particle p : particles) {
             for (int i = 0; i < World.dimensions; i++) {
-                p.addPosition(i, iterations * p.velocityFriction(i, FRICTION));
+                p.addPosition(i, iterations * p.velocityFriction(i, friction));
             }
         }
     }
 
     public double getForce(Particle a, Particle b, double realDist) {
-        double[] dist = a.distance(b);
-        if (dist[0] < UPDATE_DISTANCE && dist[1] < UPDATE_DISTANCE && dist[2] < UPDATE_DISTANCE) {
-            realDist -= REPULSION_TOLERANCE;
-            if (realDist < REPULSION_TOLERANCE) {
-                return realDist / REPULSION_TOLERANCE;
-            }
-            else if (realDist < (UPDATE_DISTANCE + REPULSION_TOLERANCE) * 0.5) {
-                return realDist / (UPDATE_DISTANCE - REPULSION_TOLERANCE) * rule[a.getType()][b.getType()];
-            }
-            else if (realDist < UPDATE_DISTANCE) {
-                return (1 - realDist / (UPDATE_DISTANCE - REPULSION_TOLERANCE)) * rule[a.getType()][b.getType()];
-            }
-        }
         return 0;
     }
 
@@ -72,7 +76,7 @@ public class Physics {
 
         // updates the velocity in each dimension based on the overall distance
         for (int i = 0; i < World.dimensions; i++) {
-            double scale = FORCE_SCALE * (a.getPosition(i) - b.getPosition(i)) * distance;
+            double scale = forceScale * (a.getPosition(i) - b.getPosition(i)) * distance;
             a.addVelocity(i, -scale * getForce(a, b, realDist));
             b.addVelocity(i, scale * getForce(b, a, realDist));
         }
@@ -87,23 +91,5 @@ public class Physics {
         }
     }
 
-    // accessors
-    public double[][] getRule() {
-        return rule;
-    }
-    public double[] getRule(int i) {
-        return rule[i];
-    }
-    public double getRule(int i, int j) {
-        return rule[i][j];
-    }
 
-    // mutators
-    public void increment(int i, int j, double step) {
-        rule[i][j] += step;
-    }
-
-    public void decrement(int i, int j, double step) {
-        rule[i][j] -= step;
-    }    
 }
