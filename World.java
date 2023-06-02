@@ -14,7 +14,7 @@ public class World {
 
     public World() {
         particles = new ArrayList<Particle>();
-        physics = new LinearPhysics(Particle.getTypes());
+        physics = new RealPhysics(Particle.getTypes());
     }
 
     public Physics getPhysics() {

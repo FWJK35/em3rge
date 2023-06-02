@@ -33,9 +33,16 @@ public class RealPhysics extends Physics {
             return false;
         }
         
+        double scale = 0;
+        double[] direction = new double[3];
+
         // adjusting positions outside each other
         for (int i = 0; i < World.dimensions; i++) {
             double dist = .5 * a.distance(i, b);
+
+            scale += dist * dist;
+            direction[i] = dist;
+
             dist *= -1;
             if (dist < 0) {
                 dist += Particle.RADIUS;
@@ -46,7 +53,12 @@ public class RealPhysics extends Physics {
             a.addPosition(i, dist);
             b.addPosition(i, -dist);
         }
-        // TODO: post-collision velocity changes
+
+        scale = 1 / scale;
+        for (int i = 0; i < World.dimensions; i++) {
+            a.addVelocity(i, direction[i] * scale);
+        }
+        
         return true;
     }
 
@@ -56,7 +68,7 @@ public class RealPhysics extends Physics {
             return 0;
         }
         
-        double force = 1/realDist;
+        double force = 1 / realDist;
         force *= getForceScale() * mass[a.getType()] * mass[b.getType()] * force;
         return force;
     }

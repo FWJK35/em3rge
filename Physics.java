@@ -8,10 +8,10 @@
 import java.util.List;
 
 public class Physics {
-    private int types = 5;
+    private int types = 10;
     private double updateDistance = 30;
     private double repulsionTolerance = 1;
-    private double forceScale = 0.001;
+    private double forceScale = 1;
     private double friction = .1;
 
     // constructor

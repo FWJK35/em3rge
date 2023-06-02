@@ -52,6 +52,7 @@ public class Window extends JFrame {
         d.requestFocusInWindow();
 
         //add attraction rules controls
+        if (d.getWorld().getPhysics() instanceof LinearPhysics) {
         Rules rules = new Rules(d.getWorld());
         GridBagConstraints rulesConstraints = new GridBagConstraints();
         rulesConstraints.fill = GridBagConstraints.BOTH;
@@ -60,6 +61,7 @@ public class Window extends JFrame {
         rulesConstraints.gridx = 0;
         rulesConstraints.gridy = 0;
         getContentPane().add(rules, rulesConstraints);
+        }
 
         JButton controls = new JButton();
         controls.setSize(100, 100);

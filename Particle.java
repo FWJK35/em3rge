@@ -3,11 +3,11 @@
  */
 
 public class Particle {
-    public static final int RADIUS = 2;
+    public static final int RADIUS = 1;
     private double[] position;
     private double[] velocity;
     // TODO: completely move types over to Physics.java
-    private static int types = 3;
+    private static int types = 10;
     private int type;
 
     // constructors
@@ -19,7 +19,7 @@ public class Particle {
         this.velocity = new double[World.dimensions];
         for (int i = 0; i < World.dimensions; i++) {
             this.position[i] = World.SIZE * Math.random();
-            this.velocity[i] = 0;
+            this.velocity[i] = .5 * World.SIZE * Math.random();
         }
     }
 
