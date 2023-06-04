@@ -5,13 +5,11 @@
  * certain bounds and then decreasing up to the edge of range
  */
 
-import java.util.List;
-
 public class Physics {
-    private int types = 10;
+    private static int types = 10;
     private double updateDistance = 30;
-    private double repulsionTolerance = 1;
-    private double forceScale = 1;
+    private double repulsionTolerance = 2;
+    private double forceScale = 0.0001;
     private double friction = .1;
 
     // constructor
@@ -19,11 +17,11 @@ public class Physics {
     }
 
     public Physics(int types) {
-        this.types = types;
+        Physics.types = types;
     }
 
     // accessors
-    public int getTypes() {
+    public static int getTypes() {
         return types;
     }
     public double getUpdateDistance() {
@@ -53,7 +51,7 @@ public class Physics {
         this.friction = friction;
     }
 
-    public void updateParticles(List<Particle> particles) {
+    public void updateParticles(Particle[] particles) {
         updateVelocity(particles);
         // decelerates velocity by multiplying friction every tick and updates position
         for (Particle p : particles) {
@@ -64,7 +62,7 @@ public class Physics {
     }
 
     // approximates a few iterations' worth of updates by keeping same velocity
-    public void updateParticles(List<Particle> particles, int iterations) {
+    public void updateParticles(Particle[] particles, int iterations) {
         updateVelocity(particles);
         // decelerates velocity by multiplying friction every tick and updates position
         for (Particle p : particles) {
@@ -81,24 +79,20 @@ public class Physics {
     // updates the velocity due to the attraction/repulsion of two particles
     public void updateVelocity(Particle a, Particle b) {
         double realDist = Math.sqrt(a.euclideanDistanceSquared(b));
-        double distance = 1;
-        if (realDist != 0) {
-            distance = 1 / realDist;
-        }
 
         // updates the velocity in each dimension based on the overall distance
         for (int i = 0; i < World.dimensions; i++) {
-            double scale = forceScale * (a.getPosition(i) - b.getPosition(i)) * distance;
+            double scale = forceScale * (a.getPosition(i) - b.getPosition(i));
             a.addVelocity(i, -scale * getForce(a, b, realDist));
             b.addVelocity(i, scale * getForce(b, a, realDist));
         }
     }
 
     // updates velocity of particles 
-    public void updateVelocity(List<Particle> particles) {
-        for (int i = 0; i < particles.size() - 1; i++) {
-            for (int j = i + 1; j < particles.size(); j++) {
-                updateVelocity(particles.get(i), particles.get(j));
+    public void updateVelocity(Particle[] particles) {
+        for (int i = 0; i < particles.length - 1; i++) {
+            for (int j = i + 1; j < particles.length; j++) {
+                updateVelocity(particles[i], particles[j]);
             }
         }
     }

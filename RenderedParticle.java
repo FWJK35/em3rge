@@ -12,6 +12,7 @@ public class RenderedParticle {
     private double screenZ;
     private double dist;
     private int renderedSize;
+    private int type;
     private Color color;
 
 
@@ -21,8 +22,7 @@ public class RenderedParticle {
         this.screenZ = screenZ;
         this.dist = dist;
         this.renderedSize = (int) (PARTICLE_SIZE * Camera.FOCAL_LENGTH / (Camera.FOCAL_LENGTH + dist));
-        float scale = (float) type / Particle.getTypes();
-        this.color = Color.getHSBColor(scale, 0.75f, 1.0f);
+        this.type = type;
     }
 
     public double getX() {
@@ -37,11 +37,19 @@ public class RenderedParticle {
         return dist;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+    
     public Color getColor() {
         return color;
     }
 
     public int getRenderedSize() {
         return renderedSize;
+    }
+
+    public int getType() {
+        return type;
     }
 }

@@ -11,7 +11,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -62,10 +61,10 @@ public class Display extends JPanel {
         double longDimension = (horizontalDisplay ? getWidth() : getHeight());
 
         //prerender particles
-        ArrayList<Particle> particles = world.getParticles();
-        RenderedParticle[] rendered = new RenderedParticle[particles.size()];
-        for (int i = 0; i < particles.size(); i++) {
-            Particle p = particles.get(i);
+        Particle[] particles = world.getParticles();
+        RenderedParticle[] rendered = new RenderedParticle[particles.length];
+        for (int i = 0; i < particles.length; i++) {
+            Particle p = particles[i];
             RenderedParticle particlePosition = cam.renderParticle(p);
             rendered[i] = null;
             if (particlePosition != null && (horizontalDisplay ? 
@@ -81,8 +80,9 @@ public class Display extends JPanel {
         for (int i = 0; i < rendered.length; i++) {
             RenderedParticle particlePosition = rendered[i];
             if (particlePosition != null) {
+                g.setColor(Color.getHSBColor((float) particlePosition.getType() / Physics.getTypes(), 0.75f, 1.0f));
                 int size = particlePosition.getRenderedSize();
-                g.setColor(particlePosition.getColor());
+                
                 g.fillOval(
                     (int) (getWidth() / 2 + longDimension * particlePosition.getX() - size/2.0), 
                     (int) (getHeight() / 2 + longDimension * particlePosition.getZ() - size/2.0), 
@@ -110,8 +110,9 @@ public class Display extends JPanel {
                 }
                 if (e.getKeyCode() == KeyEvent.VK_R) {
                     for (int p = 0; p < 1000; p++) {
-                        world.getParticles().set(p, new Particle());
+                        world.getParticles()[p] = new Particle();
                     }
+                    world.setPhysics(new LinearPhysics(Physics.getTypes()));
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_W) {

@@ -4,27 +4,26 @@
 
 public class Particle {
     public static final int RADIUS = 1;
+    private static final double MAX_INITIAL_VELOCITY = 5;
     private double[] position;
     private double[] velocity;
-    // TODO: completely move types over to Physics.java
-    private static int types = 10;
     private int type;
 
     // constructors
     public Particle() {
-        type = (int) (Math.random() * types);
+        this.type = (int) (Math.random() * Physics.getTypes());
 
         //randomly generate position and set velocity to 0
         this.position = new double[World.dimensions];
         this.velocity = new double[World.dimensions];
         for (int i = 0; i < World.dimensions; i++) {
             this.position[i] = World.SIZE * Math.random();
-            this.velocity[i] = .5 * World.SIZE * Math.random();
+            this.velocity[i] = MAX_INITIAL_VELOCITY * Math.random() - .5 * MAX_INITIAL_VELOCITY;
         }
     }
 
-    public Particle(double x, double y, double z, int type) {
-        this(x, y, z);
+    public Particle(int type) {
+        this();
         this.type = type;
     }
 
@@ -34,11 +33,22 @@ public class Particle {
         this.position = new double[] {x, y, z};
     }
 
-    public Particle(int type) {
-        this();
+    public Particle(double x, double y, double z, int type) {
+        this(x, y, z);
+        this.type = (int) (Math.random() * Physics.getTypes());
+    }
+
+    public Particle(double x, double y, double z, double vx, double vy, double vz) {
+        this.position = new double[] {x, y, z};
+        this.velocity = new double[] {vx, vy, vz};
+        this.type = (int) (Math.random() * Physics.getTypes());
+    }
+
+    public Particle(double x, double y, double z, double vx, double vy, double vz, int type) {
+        this(x, y, z, vx, vy, vz);
         this.type = type;
     }
-    
+
     // accessor methods
     public double[] getPosition() {
         return position;
@@ -58,15 +68,7 @@ public class Particle {
         return type;
     }
 
-    public static int getTypes() {
-        return types;
-    }
-
     // mutator methods
-    public static void setTypes(int types) {
-        Particle.types = types;
-    }
-
     public double velocityFriction(int i, double friction) {
         velocity[i] *= 1 - friction;
         return velocity[i];

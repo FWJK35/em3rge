@@ -41,16 +41,17 @@ public class LinearPhysics extends Physics {
     @Override
     public double getForce(Particle a, Particle b, double realDist) {
         double[] dist = a.distance(b);
-        if (dist[0] < getUpdateDistance() && dist[1] < getUpdateDistance() && dist[2] < getUpdateDistance()) {
-            realDist -= getRepulsionTolerance();
-            if (realDist < getRepulsionTolerance()) {
-                return realDist / getRepulsionTolerance();
+        double updateDistance = getUpdateDistance(), repulsionTolerance = getRepulsionTolerance();
+        double distance = realDist - repulsionTolerance;
+        if (dist[0] < updateDistance && dist[1] < updateDistance && dist[2] < updateDistance) {
+            if (distance < repulsionTolerance) {
+                return distance / repulsionTolerance;
             }
-            else if (realDist < (getUpdateDistance() + getRepulsionTolerance()) * 0.5) {
-                return realDist / (getUpdateDistance() - getRepulsionTolerance()) * getRules(a.getType(), b.getType());
+            else if (distance < (updateDistance + repulsionTolerance) * 0.5) {
+                return distance / (updateDistance - repulsionTolerance) * getRules(a.getType(), b.getType());
             }
-            else if (realDist < getUpdateDistance()) {
-                return (1 - realDist / (getUpdateDistance() - getRepulsionTolerance())) * getRules(a.getType(), b.getType());
+            else if (distance < getUpdateDistance()) {
+                return (1 - distance / (updateDistance - repulsionTolerance)) * getRules(a.getType(), b.getType());
             }
         }
         return 0;

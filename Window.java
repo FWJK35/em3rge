@@ -49,7 +49,6 @@ public class Window extends JFrame {
         getContentPane().add(d, displayConstraints);
         d.initialize();
         addKeyListener(d.getKeyAdapter());
-        d.requestFocusInWindow();
 
         //add attraction rules controls
         if (d.getWorld().getPhysics() instanceof LinearPhysics) {
@@ -61,6 +60,7 @@ public class Window extends JFrame {
         rulesConstraints.gridx = 0;
         rulesConstraints.gridy = 0;
         getContentPane().add(rules, rulesConstraints);
+        addKeyListener(rules.getKeyAdapter());
         }
 
         JButton controls = new JButton();
@@ -74,27 +74,6 @@ public class Window extends JFrame {
         getContentPane().add(controls, controlsConstraints);
 
         World w = d.getWorld();
-        /*double radius = 25;
-        int pcount = 0;
-        for (double p = Math.PI/2; p > -Math.PI/2; p -= Math.PI/12) {
-            double pcos = Math.cos(p);
-            double psin = Math.sin(p);
-            for (double y = Math.PI; y > -Math.PI; y -= Math.PI/12) {
-                double ycos = Math.cos(y);
-                double ysin = Math.sin(y);
-
-                double xOffset = radius * pcos * ycos;
-                double yOffset = radius * pcos * ysin;
-                double zOffset = radius * psin;
-                w.addParticle(new Particle(
-                    World.SIZE / 2 + xOffset,
-                    World.SIZE / 2 + yOffset,
-                    World.SIZE / 2 + zOffset
-                ));
-                pcount++;
-            }
-        }
-        System.out.println("done: " + pcount); */
 
         for (int p = 0; p < 1000; p++) {
             w.addParticle(new Particle());
@@ -107,12 +86,17 @@ public class Window extends JFrame {
             }
         });
         
-        new Timer(FRAME_LENGTH , new ActionListener() {
+        new Timer(FRAME_LENGTH, new ActionListener() {
 
             public void actionPerformed(ActionEvent a) {
+                long st = System.currentTimeMillis();
                 w.updateParticles();
+                System.out.println("Particles updated in " + (System.currentTimeMillis() - st) + " ms");
+                st = System.currentTimeMillis();
                 d.renderParticles();
+                System.out.println("Particles rendered in " + (System.currentTimeMillis() - st) + " ms");
             }
+
         }).start();
     }
     
