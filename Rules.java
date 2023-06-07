@@ -1,8 +1,10 @@
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
+import javax.swing.event.MouseInputAdapter;
 
 public class Rules extends JPanel {
     private World world;
@@ -13,6 +15,7 @@ public class Rules extends JPanel {
         this.world = world;
         this.physics = (LinearPhysics) this.world.getPhysics();
         this.types = Physics.getTypes();
+        addMouseListener(getMouseAdapter());
     }
 
     public void paint(Graphics g) {
@@ -68,5 +71,21 @@ public class Rules extends JPanel {
         else {
             return new Color(0f, (float) attraction, 0f);
         }
+    }
+
+    public MouseInputAdapter getMouseAdapter() {
+        return new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                double change = e.getID() == MouseEvent.BUTTON1 ? 0.25 : e.getID() == MouseEvent.BUTTON2 ? -0.25 : 0;
+                int clickGridX = e.getX() * (types + 2) / getWidth();
+                int clickGridY = e.getY() * (types + 2) / getHeight();
+                if (clickGridX > 0 && clickGridX < types + 1 && clickGridY > 0 && clickGridY < types + 1) {
+                    System.out.println(clickGridX + " " + clickGridY);
+                    physics.increment(clickGridY - 1, clickGridX - 1, change);
+                }
+                repaint();
+            }
+        };
     }
 }

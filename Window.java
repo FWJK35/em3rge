@@ -91,10 +91,10 @@ public class Window extends JFrame {
             public void actionPerformed(ActionEvent a) {
                 long st = System.currentTimeMillis();
                 w.updateParticles();
-                System.out.println("Particles updated in " + (System.currentTimeMillis() - st) + " ms");
+                //System.out.println("Particles updated in " + (System.currentTimeMillis() - st) + " ms");
                 st = System.currentTimeMillis();
                 d.renderParticles();
-                System.out.println("Particles rendered in " + (System.currentTimeMillis() - st) + " ms");
+                //System.out.println("Particles rendered in " + (System.currentTimeMillis() - st) + " ms");
             }
 
         }).start();

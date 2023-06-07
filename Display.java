@@ -35,21 +35,7 @@ public class Display extends JPanel {
         setFocusable(true);
         setEnabled(true);
 
-        addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                Point center = new Point(
-                    (int) getLocationOnScreen().getX() + getWidth() / 2, 
-                    (int) getLocationOnScreen().getY() + getHeight() / 2
-                );
-
-                robot.mouseMove((int) center.getX(), (int) center.getY());
-                
-                cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
-                cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
-                //renderParticles();
-            }
-        });
+        addMouseMotionListener(getMouseAdapter());
 
     }
 
@@ -151,6 +137,23 @@ public class Display extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     cam.getInfo()[Camera.ROTATION][Camera.YAW] -= Math.PI/100;
                 }
+            }
+        };
+    }
+
+    public MouseMotionAdapter getMouseAdapter() {
+        return new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Point center = new Point(
+                    (int) getLocationOnScreen().getX() + getWidth() / 2, 
+                    (int) getLocationOnScreen().getY() + getHeight() / 2
+                );
+
+                robot.mouseMove((int) center.getX(), (int) center.getY());
+                
+                cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
+                cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
             }
         };
     }
