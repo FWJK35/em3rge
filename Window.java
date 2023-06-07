@@ -21,7 +21,7 @@ public class Window extends JFrame {
     public static final int DISPLAY_WIDTH = 400;
     public static final int DISPLAY_HEIGHT = 400;
 
-    public static final int FRAME_LENGTH = 10;
+    public static final int FRAME_LENGTH = 40;
 
 
     public static void main(String[] args) {
@@ -52,7 +52,7 @@ public class Window extends JFrame {
 
         //add attraction rules controls
         if (d.getWorld().getPhysics() instanceof LinearPhysics) {
-        Rules rules = new Rules(d.getWorld());
+        LinearRules rules = new LinearRules(d.getWorld());
         GridBagConstraints rulesConstraints = new GridBagConstraints();
         rulesConstraints.fill = GridBagConstraints.BOTH;
         rulesConstraints.weightx = 0.3;
@@ -91,10 +91,10 @@ public class Window extends JFrame {
             public void actionPerformed(ActionEvent a) {
                 long st = System.currentTimeMillis();
                 w.updateParticles();
-                //System.out.println("Particles updated in " + (System.currentTimeMillis() - st) + " ms");
+                System.out.println("Particles updated in " + (System.currentTimeMillis() - st) + " ms");
                 st = System.currentTimeMillis();
-                d.renderParticles();
-                //System.out.println("Particles rendered in " + (System.currentTimeMillis() - st) + " ms");
+                repaint();
+                System.out.println("Particles rendered in " + (System.currentTimeMillis() - st) + " ms");
             }
 
         }).start();

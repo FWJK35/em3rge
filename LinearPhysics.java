@@ -1,3 +1,9 @@
+/* 
+ * LinearPhysics class is a child class of Physics.java.
+ * It calculates Particle interations, ie. force/acceleration,
+ * through a linear pattern
+ */
+
 public class LinearPhysics extends Physics {
     private double[][] rules;
 
@@ -31,18 +37,33 @@ public class LinearPhysics extends Physics {
     // mutators
     public void increment(int i, int j, double step) {
         rules[i][j] += step;
+        if (rules[i][j] > 1) {
+            rules[i][j] = 1;
+        }
+        if (rules[i][j] < -1) {
+            rules[i][j] = -1;
+        }
     }
 
-    public void decrement(int i, int j, double step) {
-        rules[i][j] -= step;
-    }    
-    
+    public void setRow(int row, double value) {
+        for (int i = 0; i < rules[row].length; i++) {
+            rules[row][i] = value;
+        }
+    }
 
+    public void setColumn(int column, double value) {
+        for (int i = 0; i < rules.length; i++) {
+            rules[i][column] = value;
+        }
+    }
+    
     @Override
     public double getForce(Particle a, Particle b, double realDist) {
         double[] dist = a.distance(b);
         double updateDistance = getUpdateDistance(), repulsionTolerance = getRepulsionTolerance();
         double distance = realDist - repulsionTolerance;
+
+        // repulses within repulsionTolerance 
         if (dist[0] < updateDistance && dist[1] < updateDistance && dist[2] < updateDistance) {
             if (distance < repulsionTolerance) {
                 return distance / repulsionTolerance;

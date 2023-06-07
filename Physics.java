@@ -1,12 +1,11 @@
 /* 
  * Physics class determines calculations and rulesets for
- * interacting Particles within range. Acceleration follows
- * linear pattern, increasing from negative to positive within
- * certain bounds and then decreasing up to the edge of range
+ * interacting Particles within range. Updates velocity and
+ * distances within an array using defined rules.
  */
 
 public class Physics {
-    private static int types = 10;
+    private static int types = 3;
     private double updateDistance = 30;
     private double repulsionTolerance = 2;
     private double forceScale = 0.0001;
@@ -71,7 +70,7 @@ public class Physics {
             }
         }
     }
-
+    
     public double getForce(Particle a, Particle b, double realDist) {
         return 0;
     }
@@ -82,7 +81,7 @@ public class Physics {
 
         // updates the velocity in each dimension based on the overall distance
         for (int i = 0; i < World.dimensions; i++) {
-            double scale = forceScale * (a.getPosition(i) - b.getPosition(i));
+            double scale = forceScale * (a.distance(i, b));
             a.addVelocity(i, -scale * getForce(a, b, realDist));
             b.addVelocity(i, scale * getForce(b, a, realDist));
         }

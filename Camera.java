@@ -1,5 +1,7 @@
 /*
- * 
+ * The Camera class represents the point and orientation in space that
+ * the user views from. It renders Particles by projecting their position
+ * and scaling their size onto a 2D viewframe, the screen.  
  */
 
 public class Camera {
@@ -8,7 +10,8 @@ public class Camera {
     private static final double halfPi = Math.PI * 0.5;
     private static final double root3 = Math.sqrt(3);
     private static final double root3inverse = 1/Math.sqrt(3);
-
+    
+    // indices for values within position and rotation arrays
     public static final int X = 0;
     public static final int Y = 1;
     public static final int Z = 2;
@@ -37,7 +40,7 @@ public class Camera {
     private double COS_PITCH;
     private double[] focusPoint;
 
-
+    // constructor
     public Camera() {
 
         position = new double[] {0.0, 0.0, 0.0};
@@ -47,8 +50,18 @@ public class Camera {
 
     }
 
+    // accessors
     public double[][] getInfo() {
         return new double[][] {position, rotation};
+    }
+    public double getCosYaw() {
+        return COS_YAW;
+    }
+    public double getSinYaw() {
+        return SIN_YAW;
+    }
+    public RenderType getRenderType() {
+        return renderType;
     }
 
     public RenderedParticle renderParticle(Particle p) {
@@ -116,17 +129,6 @@ public class Camera {
         }
 
         calculateFocusPoint();
-    }
-
-    public double getCosYaw() {
-        return COS_YAW;
-    }
-    public double getSinYaw() {
-        return SIN_YAW;
-    }
-
-    public RenderType getRenderType() {
-        return renderType;
     }
 
     public String toString() {

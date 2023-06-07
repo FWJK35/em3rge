@@ -6,12 +6,12 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 
-public class Rules extends JPanel {
+public class LinearRules extends JPanel {
     private World world;
     private LinearPhysics physics;
     private int types;
 
-    public Rules(World world) {
+    public LinearRules(World world) {
         this.world = world;
         this.physics = (LinearPhysics) this.world.getPhysics();
         this.types = Physics.getTypes();
@@ -45,18 +45,6 @@ public class Rules extends JPanel {
         }
     }
 
-    public KeyAdapter getKeyAdapter() {
-        return new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_R) {
-                    physics =(LinearPhysics) world.getPhysics();
-                    repaint();
-                }
-            }
-        };
-    }
-
     public void repaint() {
         if (getGraphics() != null) {
             paint(getGraphics());
@@ -77,14 +65,44 @@ public class Rules extends JPanel {
         return new MouseInputAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                double change = e.getID() == MouseEvent.BUTTON1 ? 0.25 : e.getID() == MouseEvent.BUTTON2 ? -0.25 : 0;
+                double change = e.getButton() == MouseEvent.BUTTON1 ? 0.25 : (e.getButton() == MouseEvent.BUTTON3 ? -0.25 : 0);
                 int clickGridX = e.getX() * (types + 2) / getWidth();
                 int clickGridY = e.getY() * (types + 2) / getHeight();
                 if (clickGridX > 0 && clickGridX < types + 1 && clickGridY > 0 && clickGridY < types + 1) {
                     System.out.println(clickGridX + " " + clickGridY);
                     physics.increment(clickGridY - 1, clickGridX - 1, change);
+                    System.out.println(change);
+                    System.out.println(physics.getRules()[0][0]);
+                    repaint();
                 }
-                repaint();
+                
+            }
+        };
+    }
+
+    public KeyAdapter getKeyAdapter() {
+        return new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_R) {
+                    //world.setPhysics(new LinearPhysics(Physics.getTypes()));
+                    physics = (LinearPhysics) world.getPhysics();
+                    repaint();
+                }
+                if (e.getKeyCode() == KeyEvent.VK_G) {
+                    world.setPhysics(new LinearPhysics(Physics.getTypes()));
+                    physics = (LinearPhysics) world.getPhysics();
+                    repaint();
+                }
+                if (e.getKeyCode() == KeyEvent.VK_C) {
+                    for (int r = 0; r < physics.getRules().length; r++) {
+                        for (int c = 0; c < physics.getRules(r).length; c++) {
+                            physics.getRules()[r][c] = 0;
+                        }
+                    }
+                    physics = (LinearPhysics) world.getPhysics();
+                    repaint();
+                }
             }
         };
     }

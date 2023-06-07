@@ -1,5 +1,6 @@
 /*
- * 
+ * RenderedParticle.java holds the calculated position 
+ * of Particles as projected on the screen / 2D plane. 
  */
 
 import java.awt.Color;

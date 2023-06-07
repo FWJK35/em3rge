@@ -1,3 +1,10 @@
+/*
+ * RealPhysics class is a child class of Physics,
+ * it uses the gravitational attraction equation
+ * with a list of mass per particle type, and 
+ * roughly approximates collisions (v. inaccurately)
+ */
+
 public class RealPhysics extends Physics {
     private double[] mass;
 

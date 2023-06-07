@@ -14,7 +14,7 @@ public class World {
     public World() {
         //particleCount = 1000;
         particles = new Particle[0];
-        physics = new LinearPhysics(2);
+        physics = new LinearPhysics(Physics.getTypes());
     }
 
     // accessors

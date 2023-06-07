@@ -1,5 +1,5 @@
 /*
- *
+ * 
  */
 
 import java.awt.AWTException;
@@ -34,14 +34,13 @@ public class Display extends JPanel {
     public void initialize() {
         setFocusable(true);
         setEnabled(true);
-
+        //setIgnoreRepaint(true);
         addMouseMotionListener(getMouseAdapter());
 
     }
 
-    public void renderParticles() {
+    public void renderParticles(Graphics g) {
         cam.update();
-        Graphics g = getGraphics();
         boolean horizontalDisplay = getWidth() >= getHeight();
         double displayRatio = horizontalDisplay ? (double) getHeight() / getWidth() : (double) getWidth() / getHeight();
         double longDimension = (horizontalDisplay ? getWidth() : getHeight());
@@ -98,7 +97,6 @@ public class Display extends JPanel {
                     for (int p = 0; p < 1000; p++) {
                         world.getParticles()[p] = new Particle();
                     }
-                    world.setPhysics(new LinearPhysics(Physics.getTypes()));
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -168,11 +166,11 @@ public class Display extends JPanel {
 
     public void paint(Graphics g) {
         super.paint(g);
-        renderParticles();
+        renderParticles(g);
     }
 
     public void repaint(Graphics g) {
         super.repaint();
-        renderParticles();
+        renderParticles(g);
     }
 }
