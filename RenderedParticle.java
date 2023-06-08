@@ -22,6 +22,7 @@ public class RenderedParticle {
         this.screenX = screenX;
         this.screenZ = screenZ;
         this.dist = dist;
+        //calculate size as rendered on screen
         this.renderedSize = (int) (PARTICLE_SIZE * Camera.FOCAL_LENGTH / (Camera.FOCAL_LENGTH + dist));
         this.type = type;
     }

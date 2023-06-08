@@ -7,14 +7,11 @@
 public class LinearPhysics extends Physics {
     private double[][] rules;
 
-    // constructor
+    // constructors
     public LinearPhysics() {
         super();
-    }
-
-    public LinearPhysics(int types) {
-        super(types);
-
+        int types = getTypes();
+        //generate random attraction matrix
         rules = new double[types][types];
         for (int i = 0; i < types; i++) {
             for (int j = 0; j < types; j++) {
@@ -22,7 +19,18 @@ public class LinearPhysics extends Physics {
             }
         }
     }
-    
+
+    public LinearPhysics(int types) {
+        super(types);
+        //generate random attraction matrix
+        rules = new double[types][types];
+        for (int i = 0; i < types; i++) {
+            for (int j = 0; j < types; j++) {
+                rules[i][j] = Math.random()*2 - 1;
+            }
+        }
+    }
+
     // accessors
     public double[][] getRules() {
         return rules;
@@ -44,13 +52,19 @@ public class LinearPhysics extends Physics {
             rules[i][j] = -1;
         }
     }
+    public void clone(LinearPhysics physics) {
+        clone(physics);
+        rules = physics.getRules();
+    }
 
+    //sets a row of attraction
     public void setRow(int row, double value) {
         for (int i = 0; i < rules[row].length; i++) {
             rules[row][i] = value;
         }
     }
 
+    //sets a column of attraction
     public void setColumn(int column, double value) {
         for (int i = 0; i < rules.length; i++) {
             rules[i][column] = value;
@@ -66,7 +80,7 @@ public class LinearPhysics extends Physics {
         // repulses within repulsionTolerance 
         if (dist[0] < updateDistance && dist[1] < updateDistance && dist[2] < updateDistance) {
             if (distance < repulsionTolerance) {
-                return distance / repulsionTolerance;
+                return getRepulsionScale() * distance / repulsionTolerance;
             }
             else if (distance < (updateDistance + repulsionTolerance) * 0.5) {
                 return distance / (updateDistance - repulsionTolerance) * getRules(a.getType(), b.getType());

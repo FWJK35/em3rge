@@ -15,7 +15,7 @@ public class RealPhysics extends Physics {
 
     public RealPhysics(int types) {
         super(types);
-
+        //sets random masses
         mass = new double[types];
         for (int i = 0; i < types; i++) {
             mass[i] = Math.random();
@@ -69,6 +69,7 @@ public class RealPhysics extends Physics {
         return true;
     }
 
+    //get force based on gravity
     @Override
     public double getForce(Particle a, Particle b, double realDist) {
         if (collision(a, b, realDist) || getUpdateDistance() < realDist) {

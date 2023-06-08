@@ -23,8 +23,11 @@ public class Display extends JPanel {
     private Robot robot;
 
     public Display() {
+        //create world and camera for rendering
         world = new World();
         cam = new Camera();
+
+        //create robot for mouse movement
         try {
             robot = new Robot();
         } catch (AWTException e) {
@@ -32,13 +35,15 @@ public class Display extends JPanel {
         }
     }
     public void initialize() {
+
+        //initialize component and mouse listener
         setFocusable(true);
         setEnabled(true);
-        //setIgnoreRepaint(true);
         addMouseMotionListener(getMouseAdapter());
 
     }
 
+    //render particles on screen using camera
     public void renderParticles(Graphics g) {
         cam.update();
         boolean horizontalDisplay = getWidth() >= getHeight();
@@ -52,6 +57,7 @@ public class Display extends JPanel {
             Particle p = particles[i];
             RenderedParticle particlePosition = cam.renderParticle(p);
             rendered[i] = null;
+            //check if particle needs to be rendered
             if (particlePosition != null && (horizontalDisplay ? 
             Math.abs(particlePosition.getZ()) < displayRatio : 
             Math.abs(particlePosition.getX()) < displayRatio)) {
@@ -59,15 +65,19 @@ public class Display extends JPanel {
             }
         }
 
+        //clear screen
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.fillOval(0, 0, 10, 10);
+
+        //render particles that should be visible
         for (int i = 0; i < rendered.length; i++) {
             RenderedParticle particlePosition = rendered[i];
             if (particlePosition != null) {
-                g.setColor(Color.getHSBColor((float) particlePosition.getType() / Physics.getTypes(), 0.75f, 1.0f));
+                //set color based on type
+                g.setColor(Color.getHSBColor((float) particlePosition.getType() / world.getPhysics().getTypes(), 0.75f, 1.0f));
                 int size = particlePosition.getRenderedSize();
                 
+                //draw the particle
                 g.fillOval(
                     (int) (getWidth() / 2 + longDimension * particlePosition.getX() - size/2.0), 
                     (int) (getHeight() / 2 + longDimension * particlePosition.getZ() - size/2.0), 
@@ -75,54 +85,58 @@ public class Display extends JPanel {
                 );
             }
         }
-        //System.out.println(world.getParticles().size() + " particles at " + (System.currentTimeMillis() - start) + "ms/frame");
     }
 
+    //method to get key adapter to be implemented into the window
     public KeyAdapter getKeyAdapter() {
         return new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_U) {
-                    world.updateParticles();
-                }
 
-                if (e.getKeyCode() == KeyEvent.VK_C) {
-                    cam.getInfo()[Camera.POSITION][Camera.X] = 0;
-                    cam.getInfo()[Camera.POSITION][Camera.Y] = 50;
-                    cam.getInfo()[Camera.POSITION][Camera.Z] = 50;
-                    cam.getInfo()[Camera.ROTATION][Camera.PITCH] = 0;
-                    cam.getInfo()[Camera.ROTATION][Camera.YAW] = 0;
-                }
+                //reset particle positions random
                 if (e.getKeyCode() == KeyEvent.VK_R) {
                     for (int p = 0; p < 1000; p++) {
-                        world.getParticles()[p] = new Particle();
+                        world.getParticles()[p] = new Particle(world.getPhysics().getTypes(), true);
                     }
                 }
-
+                //reset particle positions snake
+                if (e.getKeyCode() == KeyEvent.VK_X) {
+                    for (int p = 0; p < world.getParticles().length; p++) {
+                        world.getParticles()[p] = new Particle(p * World.SIZE / world.getParticles().length, 
+                        1 * Math.random(), 1 * Math.random(), (int) (((double) p / world.getParticles().length) * world.getPhysics().getTypes()), false);
+                        
+                    }
+                }
+                
+                //move forward
                 if (e.getKeyCode() == KeyEvent.VK_W) {
                     cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.getCosYaw();
                     cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.getSinYaw();
                 }
+                //move left
                 if (e.getKeyCode() == KeyEvent.VK_A) {
                     cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.getSinYaw();
                     cam.getInfo()[Camera.POSITION][Camera.Y] += MOVE_SPEED * cam.getCosYaw();
                 }
+                //move backward
                 if (e.getKeyCode() == KeyEvent.VK_S) {
                     cam.getInfo()[Camera.POSITION][Camera.X] -= MOVE_SPEED * cam.getCosYaw();
                     cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.getSinYaw();
                 }
+                //move right
                 if (e.getKeyCode() == KeyEvent.VK_D) {
                     cam.getInfo()[Camera.POSITION][Camera.X] += MOVE_SPEED * cam.getSinYaw();
                     cam.getInfo()[Camera.POSITION][Camera.Y] -= MOVE_SPEED * cam.getCosYaw();
                 }
-
+                //move up
                 if (e.getKeyCode() == KeyEvent.VK_Q) {
                     cam.getInfo()[Camera.POSITION][Camera.Z] += 1;
                 }
+                //move down
                 if (e.getKeyCode() == KeyEvent.VK_E) {
                     cam.getInfo()[Camera.POSITION][Camera.Z] -= 1;
                 }
-
+                //move camera with arrow keys
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
                     cam.getInfo()[Camera.ROTATION][Camera.PITCH] += Math.PI/100;
                 }
@@ -139,6 +153,7 @@ public class Display extends JPanel {
         };
     }
 
+    //method to get mouse adapter for camera movement
     public MouseMotionAdapter getMouseAdapter() {
         return new MouseMotionAdapter() {
             @Override
@@ -147,9 +162,9 @@ public class Display extends JPanel {
                     (int) getLocationOnScreen().getX() + getWidth() / 2, 
                     (int) getLocationOnScreen().getY() + getHeight() / 2
                 );
-
+                //move mouse back to center of screen
                 robot.mouseMove((int) center.getX(), (int) center.getY());
-                
+                //rotate camera
                 cam.getInfo()[Camera.ROTATION][Camera.PITCH] -= (e.getY() - getHeight() / 2) / 1000.0;
                 cam.getInfo()[Camera.ROTATION][Camera.YAW] -= (e.getX() - getWidth() / 2) / 1000.0;
             }

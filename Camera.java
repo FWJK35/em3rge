@@ -38,15 +38,12 @@ public class Camera {
     private double COS_YAW;
     private double SIN_PITCH;
     private double COS_PITCH;
-    private double[] focusPoint;
 
     // constructor
     public Camera() {
 
         position = new double[] {0.0, 0.0, 0.0};
         rotation = new double[] {0.0, 0.0};
-
-        focusPoint = new double[3];
 
     }
 
@@ -64,11 +61,11 @@ public class Camera {
         return renderType;
     }
 
+    //gets on-screen location of a perticle in the world
     public RenderedParticle renderParticle(Particle p) {
-        //TODO properly modify relative position
         double[] worldDist = p.distance(position);
-        //System.out.println(Arrays.toString(p.getPosition()) + Arrays.toString(position) + Arrays.toString(worldDist));
 
+        //works by rotating the point around the camera, then projecting it to a plane
         //rotate by -yaw
         double newX = (worldDist[X] * COS_YAW + worldDist[Y] * SIN_YAW);
         double newY = (worldDist[Y] * COS_YAW - worldDist[X] * SIN_YAW);
@@ -76,10 +73,12 @@ public class Camera {
         double newZ = (worldDist[Z] * COS_PITCH - newX * SIN_PITCH);
         newX = (newX * COS_PITCH + worldDist[Z] * SIN_PITCH);
         double newXInverse = 1 / newX;
+
+        //don't render points behind
         if (newX < 0) {
             return null;
         }
-
+        //project onto screen
         double screenX = root3inverse * -newY * newXInverse;
         double screenZ = root3inverse * -newZ * newXInverse;
         
@@ -90,45 +89,22 @@ public class Camera {
         return new RenderedParticle(screenX, screenZ, Math.sqrt(newX * newX + newY * newY + newZ * newZ), p.getType());
     }
 
-    public void calculateFocusPoint() {
-
-        SIN_YAW = Math.sin(rotation[YAW]);
-        COS_YAW = Math.cos(rotation[YAW]);
-        SIN_PITCH = Math.sin(rotation[PITCH]);
-        COS_PITCH = Math.cos(rotation[PITCH]);
-
-        double xOffset = FOCAL_LENGTH * COS_PITCH * COS_YAW;
-        double yOffset = FOCAL_LENGTH * COS_PITCH * SIN_YAW;
-        double zOffset = FOCAL_LENGTH * SIN_PITCH;
-
-        focusPoint[X] = position[X] - xOffset;
-        focusPoint[Y] = position[Y] - yOffset;
-        focusPoint[Z] = position[Z] - zOffset;
-
-        for (int i = 0; i < World.dimensions; i++) {
-            focusPoint[i] %= World.SIZE;
-        }
-    }
-
+    //update camera info such as pitch and yaw
     public void update() {
         for (int i = 0; i < World.dimensions; i++) {
             position[i] %= World.SIZE;
             if (position[i] < 0) position[i] += World.SIZE;
         }
 
-        // if (rotation[PITCH] > Math.PI / 2) {
-        //     rotation[PITCH] = Math.PI / 2;
-        // }
-        // if (rotation[PITCH] < -Math.PI / 2) {
-        //     rotation[PITCH] = -Math.PI / 2;
-        // }
-
         rotation[YAW] %= 2 * Math.PI;
         if (Math.abs(rotation[PITCH]) > halfPi) {
             rotation[PITCH] = Math.signum(rotation[PITCH]) * halfPi;
         }
 
-        calculateFocusPoint();
+        SIN_YAW = Math.sin(rotation[YAW]);
+        COS_YAW = Math.cos(rotation[YAW]);
+        SIN_PITCH = Math.sin(rotation[PITCH]);
+        COS_PITCH = Math.cos(rotation[PITCH]);
     }
 
     public String toString() {

@@ -4,14 +4,17 @@
 
 public class Particle {
     public static final int RADIUS = 1;
-    private static final double MAX_INITIAL_VELOCITY = 5;
+    private static final double MAX_INITIAL_VELOCITY = 0;
     private double[] position;
     private double[] velocity;
     private int type;
 
     // constructors
-    public Particle() {
-        this.type = (int) (Math.random() * Physics.getTypes());
+    public Particle(int type, boolean random) {
+        this.type = type;
+        if (random) {
+            this.type = (int) (Math.random() * type);
+        }
 
         //randomly generate position and set velocity to 0
         this.position = new double[World.dimensions];
@@ -22,31 +25,15 @@ public class Particle {
         }
     }
 
-    public Particle(int type) {
-        this();
-        this.type = type;
-    }
-
-    public Particle(double x, double y, double z) {
-        this();
-        //randomly generate position
+    public Particle(double x, double y, double z, int type, boolean random) {
+        this(type, random);
         this.position = new double[] {x, y, z};
     }
 
-    public Particle(double x, double y, double z, int type) {
-        this(x, y, z);
-        this.type = (int) (Math.random() * Physics.getTypes());
-    }
-
-    public Particle(double x, double y, double z, double vx, double vy, double vz) {
-        this.position = new double[] {x, y, z};
+    //initializes particle with specific values and type
+    public Particle(double x, double y, double z, double vx, double vy, double vz, int type, boolean random) {
+        this(x, y, z, type, random);
         this.velocity = new double[] {vx, vy, vz};
-        this.type = (int) (Math.random() * Physics.getTypes());
-    }
-
-    public Particle(double x, double y, double z, double vx, double vy, double vz, int type) {
-        this(x, y, z, vx, vy, vz);
-        this.type = type;
     }
 
     // accessor methods

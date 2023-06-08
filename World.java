@@ -1,5 +1,7 @@
 /*
- * 
+ * The World class holds an array of Particles as
+ * well as a Physics class used to update the array. 
+ * It is representative of the world 
  */
 
 public class World {
@@ -12,9 +14,16 @@ public class World {
     //private int particleCount;
 
     public World() {
-        //particleCount = 1000;
-        particles = new Particle[0];
-        physics = new LinearPhysics(Physics.getTypes());
+        //uses an array over arrayList for faster accessing
+        this.particles = new Particle[0];
+        this.physics = new Physics();
+    }
+    public World(int particles) {
+        this.particles = new Particle[particles];
+        this.physics = new Physics();
+        for (int i = 0; i < particles; i++) {
+            this.particles[i] = new Particle(physics.getTypes(), true);
+        }
     }
 
     // accessors
@@ -32,9 +41,14 @@ public class World {
     }
 
     public void updateParticles() {
-        physics.updateParticles(particles, 1);
+        physics.updateParticles(particles);
     }
 
+    public void updateParticles(int iterations) {
+        physics.updateParticles(particles, iterations);
+    }
+
+    //adds a particle to the array
     public void addParticle(Particle p) {
         Particle[] newParticles = new Particle[particles.length + 1];
         for (int i = 0; i < particles.length; i++) {
@@ -42,6 +56,18 @@ public class World {
         }
         newParticles[particles.length] = p;
         particles = newParticles;
+    }
+
+    public void reset() {
+        for (int i = 0; i < particles.length; i++) {
+            particles[i] = new Particle(physics.getTypes(), true);
+        }
+    }
+    public void reset(int particles) {
+        this.particles = new Particle[particles];
+        for (int i = 0; i < particles; i++) {
+            this.particles[i] = new Particle(physics.getTypes(), true);
+        }
     }
 
 }
