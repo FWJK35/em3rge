@@ -4,7 +4,7 @@
  * through a linear pattern
  */
 
-public class LinearPhysics extends Physics {
+public class LinearPhysics extends PhysicsBase {
     private double[][] rules;
 
     // constructors

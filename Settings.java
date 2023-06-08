@@ -30,10 +30,10 @@ public class Settings extends JPanel {
         int textX = getWidth() / 4;
         g.drawString("Particle Count: " + world.getParticles().length, textX, 20);
         g.drawString("Type Count: " + physics.getTypes(), textX, 60);
-        g.drawString("Force Scale: " + physics.getForceScale(), textX, 100);
+        g.drawString("Force Scale: " + (int) ((physics.getForceScale()) * 1000000 + 0.5) / 1000000.0, textX, 100);
         g.drawString("Max Distance: " + physics.getUpdateDistance(), textX, 140);
         g.drawString("Repulsion Distance: " + physics.getRepulsionTolerance(), textX, 180);
-        g.drawString("Friction: " + physics.getFriction(), textX, 220);
+        g.drawString("Friction: " + (int) ((physics.getFriction()) * 1000000 + 0.5) / 1000000.0, textX, 220);
         
         for (int b = 0; b < 6; b++) {
             g.drawRect(0, 40 * b, 40, 40);
@@ -76,10 +76,10 @@ public class Settings extends JPanel {
                     //edit force scale
                     if (clickGridRow == 2) {
                         if (side == -1) {
-                            physics.setForceScale(physics.getForceScale() / Math.sqrt(10));
+                            physics.setForceScale(physics.getForceScale() / Math.pow(10, 0.25));
                         }
                         else {
-                            physics.setForceScale(physics.getForceScale() * Math.sqrt(10));
+                            physics.setForceScale(physics.getForceScale() * Math.pow(10, 0.25));
                         }
                     }
                     //edit update distance
@@ -99,10 +99,10 @@ public class Settings extends JPanel {
                     //edit friction
                     if (clickGridRow == 5) {
                         if (side == -1) {
-                            physics.setFriction(physics.getFriction() / Math.sqrt(10));
+                            physics.setFriction(physics.getFriction() / Math.pow(10, 0.25));
                         }
                         else {
-                            physics.setFriction(physics.getFriction() * Math.sqrt(10));
+                            physics.setFriction(physics.getFriction() * Math.pow(10, 0.25));
                         }
                     }
                 }

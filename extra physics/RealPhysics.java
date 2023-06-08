@@ -5,7 +5,7 @@
  * roughly approximates collisions (v. inaccurately)
  */
 
-public class RealPhysics extends Physics {
+public class RealPhysics extends PhysicsBase {
     private double[] mass;
 
     // constructor

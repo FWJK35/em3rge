@@ -4,7 +4,7 @@
  * distances within an array using defined rules.
  */
 
-public class Physics {
+public class PhysicsBase {
     private int types = 10;
     private double updateDistance = 50;
     private double repulsionTolerance = 2;
@@ -13,10 +13,10 @@ public class Physics {
     private double friction = .1;
 
     // constructor
-    public Physics() {
+    public PhysicsBase() {
     }
 
-    public Physics(int types) {
+    public PhysicsBase(int types) {
         this.types = types;
     }
 
@@ -59,7 +59,7 @@ public class Physics {
     public void setFriction(double friction) {
         this.friction = friction;
     }
-    public void clone(Physics physics) {
+    public void clone(PhysicsBase physics) {
         types = physics.getTypes();
         updateDistance = physics.getUpdateDistance();
         repulsionTolerance = physics.getRepulsionTolerance();

@@ -4,6 +4,7 @@
  * It is representative of the world 
  */
 
+
 public class World {
 
     public static final int dimensions = 3;
